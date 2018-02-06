@@ -11,9 +11,6 @@ namespace BPM.Models
 
         public string ActionCode { get; set; }
 
-
-        
-
         public Guid StepId { get; set; }
     }
 }
