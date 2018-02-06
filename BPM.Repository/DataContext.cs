@@ -13,6 +13,8 @@ namespace BPM.Repository
         {
         }
         public DbSet<FlowTemplate> FlowTemplate { get; set; }
+
+        public DbSet<FlowAction> FlowAction { get; set; }
        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
