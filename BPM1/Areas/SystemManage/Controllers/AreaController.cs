@@ -8,16 +8,19 @@ using Newtonsoft.Json;
 using System.Xml;
 using BPM.Models;
 using BPM.Repository;
+using BPM.Repository.SystemManage;
 
 namespace BPM1.Areas.SystemManage.Controllers
 {
     [Area("SystemManage")]
     public class AreaController : Controller
     {
+        AreaReponsitory _areaReponsitory;
         DataContext _db;
-        public AreaController(DataContext db)
+        public AreaController(DataContext db, AreaReponsitory areaReponsitory)
         {
             _db = db;
+            _areaReponsitory = areaReponsitory;
         }
 
 
@@ -34,11 +37,30 @@ namespace BPM1.Areas.SystemManage.Controllers
         /// 区域管理主数据
         /// </summary>
         /// <returns></returns>
-        public String GetAllAreas(string ParameterJson, JqSortParam jqsortparam)
+        public string GetAllAreas(string ParameterJson, JqSortParam jqsortparam)
         {
             //string f = JsonConvert.SerializeObject(jqsortparam);
             var list = _db.Power_Area.ToList();
             return  JsonConvert.SerializeObject(list);
+        }
+
+
+        /// <summary>
+        /// 获取数据表有效的json数据
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        public string GetAllAreasJsons()
+        {
+            //string areaJson = _areabll.GetListJson();
+            //List<Power_AreaView> list = JsonConvert.DeserializeObject<List<Power_AreaView>>(areaJson);
+
+            //var areaList = list.Where(p => p.IsEnable != false).OrderBy(d => d.U_SortNo).ToList();
+            //return areaList.ToJson();
+
+            IEnumerable<Power_Area> areaList  = _areaReponsitory.List(x => x.IsEnable ==true);
+            return JsonConvert.SerializeObject(areaList);
+            //return areaJson;
         }
 
         /// <summary>
@@ -64,22 +86,9 @@ namespace BPM1.Areas.SystemManage.Controllers
         //    return JsonManager.ToPageJson(jqgridparam, sAreaJson);
         //}
 
-  
 
-        ///// <summary>
-        ///// 获取数据表有效的json数据
-        ///// </summary>
-        ///// <returns></returns>
-        //[AllowAnonymous]
-        //public String GetAllAreasJsons()
-        //{
-        //    string areaJson = _areabll.GetListJson();
-        //    List<Power_AreaView> list = JsonConvert.DeserializeObject<List<Power_AreaView>>(areaJson);
 
-        //    var areaList = list.Where(p => p.IsEnable != false).OrderBy(d => d.U_SortNo).ToList();
-        //    return areaList.ToJson();
-        //    //return areaJson;
-        //}
+
 
 
         ///// <summary>

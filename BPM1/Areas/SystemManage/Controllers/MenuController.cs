@@ -162,7 +162,7 @@ namespace BPM1.Areas.SystemManage.Controllers
         /// <returns></returns>
         public string GetLeftMenuJsons()
         {
-            List<Power_Menu> list = _menuRepository.List(p => p.IsEnable == true).ToList();
+            IEnumerable<Power_Menu> list = _menuRepository.List(p => p.IsEnable == true);
             //List<Power_Menu> list = _db.Power_Menu.Where(p => p.IsEnable == true).ToList();
             //List<Power_MenuView> list = menuCache.GetMenuList();
             //var menuList = list.Where(p => p.IsEnable == true).OrderBy(d => d.U_SortNo).ToList();
@@ -214,7 +214,6 @@ namespace BPM1.Areas.SystemManage.Controllers
             if (Id == Guid.Empty)
             {
                 model.ID = Guid.NewGuid();
-                model.CreateTime = DateTime.Now;
                 model.IsEnable = true;
                 model.IsShow = true;
                 model.Style = "add";

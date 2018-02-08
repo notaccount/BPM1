@@ -132,7 +132,7 @@ namespace Hasng.CadreFile.WebApp.Areas.PowerManage.Controllers
                     userModel.IsSuperUser = false;
                     userModel.IsTrilateral = false;
                     //userModel.U_LastModifiedDate = DateTime.Now;
-                    userModel.CreateTime = DateTime.Now;
+     
 
    
                     _userRepository.Add(userModel);

@@ -1,0 +1,94 @@
+﻿@charset "utf-8";
+/* CSS Document */
+html,
+body{ margin:0; padding:0; border:0; background-color: #fdfdfd;font: 14px / 1.5 "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif; height:100% ;overflow: hidden;}
+h1,h2,h3,h4,p,img,ul,li,dl,dt,dd,select,strong,ol{ margin:0; padding:0; border:0; list-style:none;}
+a:link,a:visited{ border:0;text-decoration:none; }
+a:focus {  outline:none;   -moz-outline:none;}
+a,div{ color: #000;}
+img,button{ border:none; outline-style:none; background-color: transparent;}
+.Head-portrait img{margin-top:30px;}
+/*:not(input[type='checkbox']){ border:none; outline-style:none; background-color: transparent;  }*/
+.inputcheckbox{margin: 0;list-style: none;  border:none; outline-style:none; background-color: transparent;}
+i,em{font-style:normal;}
+s,del{ text-decoration:none;}
+html{min-width:950px;width:100%;height:100%;overflow-x:hidden}
+input{ border: none;}
+.nth{position:relative; margin:0 auto;text-align: center;}
+.posi-re{position:relative;}
+
+
+.Whole{ width: 100%; height: 100%; position: relative;}
+/*扫描二维码开始*/
+.QR-bj{ width: 270px; height: 240px; padding: 65px 15px; background:url("../images/QR_bj.png") no-repeat center; position: absolute; left: 50%; top: 50%; margin-left: -150px; margin-top: -185px; z-index: 1; display: none;}
+.QR-bj .current-position{position: absolute;left:20px;top:30px;font-size: 15px;font-weight: bold;}
+.QR-bj .delete{ position: absolute; width: 24px; height: 24px; top: 29px; right: 20px;  background:url("../images/delete.png") no-repeat center; display: block!important;}
+.QR-bj:hover .delete{ display: block; cursor: pointer; }
+.place-container{height: 280px;overflow: hidden;}
+.place-list{}
+.QR-bj .bar{position: absolute;width:270px;height: 1px;background: #ccc;}
+
+.place-list li{line-height: 30px;text-align: center;cursor: pointer;}
+.place-list li a{display: block;color:#333;}
+.place-list li a:hover{background: #1477b2;color:#fff;}
+/*扫描二维码结束*/
+.Sign-in{ width: 670px; height: 420px; position: absolute; left: 50%; top: 50%; margin-left:-335px; margin-top: -210px; background: url("../images/sign_in_bj.png") no-repeat center;}
+.Sign-in-content{ width: 610px; height: 354px; background-color: #fff;  position: absolute; left: 50%; top: 50%; margin-left: -305px; margin-top: -177px;}
+.Sign-in-content-top{ width: 100%; height: 70px; background: url("../images/Sign-in-title.png") no-repeat center; overflow: hidden; }
+.Sign-in-content-top .fast-ks{ float: left; width: 24px; height: 70px; background: url("/sign-in/images/fast.png") no-repeat center; margin-left: 15px; display: none;}
+.Sign-in-content-top .fast-wz{ float: left; height: 70px; line-height: 70px; font-size: 22px; color: #ecf8ff; margin-left: 10px; display: none;}
+.Sign-in-content-top .Return{ float: right; line-height: 70px; font-size: 18px; color: #ecf8ff; margin-right: 15px; display: none;}
+.Sign-in-content-top .Return:hover{ color: #fff; }
+.sign-in-logo{ width: 417px; height: 50px; background:url("../images/sign-in-logo.png") no-repeat center; margin: 10px auto 0;}
+/*输入框开始*/
+.Sign-in-content-bottom{ width: 610px; height: 284px; }
+.Sign-in-content-bottom-left{ float: left; width: 226px; height: 284px; position: relative;}
+.Sign-in-content-bottom-auto{ float: left; width: 1px; height: 284px;text-align:center;}
+.Sign-in-content-bottom-right{ float: left; width: 356px; height: 237px; padding: 47px 0 0 27px; }
+.Sign-in-content-bottom-left .Head-portrait{ width: 140px; height: 160px; border: 1px solid #c3e2f4; position: absolute;  left: 50%; top: 50%; margin-left: -70px; margin-top: -80px;text-align:center; }
+.Sign-in-content-bottom-auto .line02{ width: 1px; height: 284px; background: url("../images/line2.png") no-repeat center;}
+.Sign-in-content-bottom-right .b-title{ height: 36px;  margin-bottom: 14px;}
+    .Sign-in-content-bottom-right .b-title .title {
+        position: absolute;
+        height: 36px;
+        line-height: 36px;
+        font-size: 16px;
+        color: #333;
+        font-weight: normal;
+    }
+.Sign-in-content-bottom-right .b-title  .QR-c{display: inline-block;vertical-align: middle;}/* display: block; width: 100%; height: 100%; background: url("../images/QR_code.png") no-repeat center;*/
+.Sign-in-content-bottom-right .b-title  .QR-c:hover{ background: url("../images/QR_code_y.png") no-repeat center;}
+.Sign-in-content-bottom-right .sr-input{ }
+.Sign-in-content-bottom-right .sr-input .account,.Sign-in-content-bottom-right .sr-input .password{ width: 239px; height: 36px; border: 1px solid #acacac; margin-bottom: 14px;}
+.Sign-in-content-bottom-right .sr-input .password{ margin-bottom: 21px;}
+.Sign-in-content-bottom-right .sr-input .account .Icon-account{ float: left; width: 32px; height: 33px;  background: url("../images/Account.png") no-repeat center;}
+.Sign-in-content-bottom-right .sr-input .account .Icon-password{ float: left; width: 32px; height: 33px; background: url("../images/Password.png") no-repeat center;}
+.Sign-in-content-bottom-right .sr-input .account .line-auto{ float: left;  width: 1px; height: 16px; background-color: #dfdfdf; margin-top: 10px;}
+.Sign-in-content-bottom-right .sr-input .account .input-right{ float: left; width: 206px; height: 36px; }
+.Sign-in-content-bottom-right .sr-input .account .input-right .z-h{ width: 200px; padding-left:6px!important; font-size: 16px; background-color: #fff!important;}
+.Sign-in-content-bottom-right .sr-input .login{ width: 240px; height: 36px;margin-left:88px;}
+.Sign-in-content-bottom-right .sr-input .d-login{ display: block; width: 100%; height: 100%; text-align: center; line-height: 36px; font-size: 16px; color: #fff; background-color: #44a4dd;}
+.Sign-in-content-bottom-right .sr-input .d-login:hover{ background-color: #1477b2;}
+
+
+.Sign-in-content-bottom-right .sr-input .account-box .title{position: absolute;height:36px;line-height:36px;font-size: 16px;color: #333;font-weight: normal;}
+.Sign-in-content-bottom-right .sr-input .account{margin-left:88px;}
+.Sign-in-content-bottom-right .b-title .QR{cursor: pointer;margin-left:88px;height:36px;display:inline-block;}
+
+/*输入框结束*/
+
+/*快速登录开始*/
+.fast-title{ width: 100%; height: 70px; background: url("../images/Sign-in-title.png") no-repeat center; overflow: hidden; display: none; }
+.fast-login{width: 480px; height: 210px; padding: 20px; display: none; }
+.fast-login-top{ width: 100%; height: 80px;}
+.fast-login-top ul li{ float: left;}
+.fast-login-top .fast-login-top-content{ }
+.fast-login-top .fast-login-top-content .Head-portrait-tx{ width: 78px; height: 78px; border: 1px solid #c3e2f4; background: url("../images/Head_portrait_tx.png") no-repeat center; cursor: pointer;}
+.fast-login-top .fast-login-top-content .line{ width: 1px; height: 56px;  background-color: #d5d5d5; margin: 13px 26px 0;}
+.fast-login-auto{ width: 100%; height: 47px;}
+.fast-login-auto ul li{ float: left;}
+.fast-login-auto  .fast-login-auto-content .line{ width: 80px; height: 47px;}
+.fast-login-auto  .fast-login-auto-content .line .line-l{ display: block; width: 56px; height: 1px;  background-color: #d5d5d5; margin:  23px auto }
+.fast-login-auto  .fast-login-auto-content .round{ width: 51px; height: 47px;}
+.fast-login-auto  .fast-login-auto-content .round .round-r{ display: block; width: 5px; height: 5px; margin: 21px auto 20px; background: url("../images/round.png") no-repeat center;}
+/*快速登录开始*/

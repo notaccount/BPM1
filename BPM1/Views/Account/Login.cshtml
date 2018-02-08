@@ -1,0 +1,394 @@
+﻿@{
+    Layout = null;
+}
+
+@using System.Security.Claims;
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link href="~/Sign-in/css/Sign-in.css" rel="stylesheet" />
+    <link href="~/Sign-in/js/scroll/jquery.mCustomScrollbar.css" rel="stylesheet" />
+
+    <script src="~/miniui/boot.js"></script>
+    <script src="~/js/TreeSelectWindow.js"></script>
+    <style>
+        .mini-panel-toolbar a:link, .mini-panel-toolbar a:visited, .mini-panel-footer a:link, .mini-panel-footer a:visited {
+            border: 1px solid #dedede;
+        }
+
+        .mini-window .mini-panel-header {
+            background: #2A91C1 !important;
+        }
+
+        .mini-panel-title {
+            color: white !important;
+        }
+
+        .mini-panel-header .mini-panel-header-inner {
+            padding: 10px;
+        }
+
+        .mini-panel-header .mini-tools {
+            top: 10px;
+        }
+
+        .mini-grid-rows-content {
+            padding: 10px 0 0 10px;
+        }
+
+        .b-title .title {
+            height: 24px;
+            line-height: 23px;
+        }
+
+
+        .mini-buttonedit {
+            height: 36px;
+        }
+
+        .mini-buttonedit {
+            width: 239px;
+        }
+
+        .mini-buttonedit-border {
+            height: 33px;
+            padding-left: 0;
+            border: 1px solid #acacac;
+        }
+
+        .mini-buttonedit-buttons {
+            top: 9px;
+        }
+
+        .mini-buttonedit .mini-buttonedit-input {
+            padding: 8px 0;
+            text-indent: 10px;
+            font-size: 16px;
+        }
+
+        .Sign-in-content-bottom-right .sr-input .account .input-right .z-h {
+            padding: 9px 0;
+        }
+
+        .mini-panel-footer .mini-button .mini-button-text {
+            padding: 8px 0;
+        }
+
+        .body-footer {
+            height: 40px;
+            line-height: 40px;
+            position: absolute;
+            bottom: 0;
+            text-align: center;
+            width: 100%;
+        }
+
+            .body-footer .copy-text {
+                font-size: 14px;
+                color: #333;
+            }
+
+
+
+
+        .Sign-in-content-bottom-right .sr-input .account .input-right .z-h {
+            padding: 6px 0;
+        }
+
+        .mini-textbox-border {
+            border: none;
+        }
+
+        .mini-textbox-input {
+            font-size: 16px;
+        }
+
+        .mini-placeholder-label {
+            color: #9a9a9a;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="Whole">
+
+        <img src="/sign-in/images/Sign_in.png" alt="" width="100%" height="100%" />
+        <div class="Sign-in">
+            <div class="Sign-in-content">
+                <div class="Sign-in-content-top">
+                    <i class="fast-ks"></i>
+                    <h4 class="fast-wz">快速登陆</h4>
+                    <div class="sign-in-logo"></div>
+                    <a href="javascript:void(0)" class="Return">返回</a>
+                </div>
+                <!--输入框开始-->
+                <div class="Sign-in-content-bottom">
+                    <div class="Sign-in-content-bottom-left">
+                        <div class="Head-portrait">
+                            <img src="/sign-in/images/Head_portrait01.png" alt="" />
+                        </div>
+                    </div>
+                    <div class="Sign-in-content-bottom-auto">
+                        <div class="line02"></div>
+                    </div>
+                    <div class="Sign-in-content-bottom-right">
+                        <div class="b-title">
+                            <span class="title">管档单位</span>
+                            <span class="QR">
+
+                                @*<span class="address-name">江苏省</span><a href="javascript:void(0)" class="QR-c"><img src="images/drop-down.png" alt="" style="display: block;border: none;" /></a>*@
+                                @*<input id="areaID" name="areaID" class="mini-treeselect" url="/SystemManage/Area/GetAllAreasJsons" multiSelect="false" valueFromSelect="false"
+                                    textField="Title" valueField="ID" parentField="ParentID" allowInput="false"
+                                    showFolderCheckBox="false" expandOnLoad="true" required="true" requiredErrorText="请选择所属区域"  popupHeight="150" popupWidth="250"/>*@
+                                <input id="btnEdit1" class="mini-buttonedit" allowInput="false" onbuttonclick="onButtonEdit" />
+                                <input type="hidden" id="cFlag" />
+
+
+
+
+
+
+
+
+                            </span>
+                        </div>
+                        <div class="sr-input">
+                            <div class="account-box">
+                                <span class="title">登录帐号</span>
+                                <div class="account">
+                                    <i class="Icon-account"></i>
+                                    <span class="line-auto"></span>
+                                    <div class="input-right">
+                                        @*<input type="text" name="账号" class="z-h" />*@
+                                        @*<input name="uid"  id="uid" class="z-h" value="archiveadmin" placeholder="请输入登录帐号" type="text" />*@
+                                        <input class="mini-textbox z-h" name="uid" id="uid" value="archiveadmin" emptyText="请输入登录帐号" maxlength="30" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="account-box">
+                                <span class="title">密码</span>
+                                <div class="account password">
+                                    <i class="Icon-password"></i>
+                                    <span class="line-auto"></span>
+                                    <div class="input-right">
+                                        @*<input type="text" name="账号" class="z-h" />*@
+                                        @*<input name="password" id="pwd" type="password" class="z-h" value="123456" placeholder="请输入密码"/>*@
+                                        <input class="mini-password z-h" name="password" id="pwd" value="123456" emptyText="请输入密码" maxlength="30" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="login">
+                                <a href="javascript:loginObj.login()" class="d-login">登录</a>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <!--输入框结束-->
+                <!--快速登陆开始-->
+                <div class="fast-login">
+                    <div class="fast-login-top">
+                        <ul class="fast-login-top-content">
+                            <li class="Head-portrait-tx"></li>
+                            <li class="line"></li>
+                            <li class="Head-portrait-tx"></li>
+                            <li class="line"></li>
+                            <li class="Head-portrait-tx"></li>
+                            <li class="line"></li>
+                            <li class="Head-portrait-tx"></li>
+                        </ul>
+                    </div>
+                    <div class="fast-login-auto">
+                        <ul class="fast-login-auto-content">
+                            <li class="line">
+                                <i class="line-l"></i>
+                            </li>
+                            <li class="round">
+                                <i class="round-r"></i>
+                            </li>
+                            <li class="line">
+                                <i class="line-l"></i>
+                            </li>
+                            <li class="round">
+                                <i class="round-r"></i>
+                            </li>
+                            <li class="line">
+                                <i class="line-l"></i>
+                            </li>
+                            <li class="round">
+                                <i class="round-r"></i>
+                            </li>
+                            <li class="line">
+                                <i class="line-l"></i>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="fast-login-top">
+                        <ul class="fast-login-top-content">
+                            <li class="Head-portrait-tx"></li>
+                            <li class="line"></li>
+                            <li class="Head-portrait-tx"></li>
+                            <li class="line"></li>
+                            <li class="Head-portrait-tx"></li>
+                            <li class="line"></li>
+                            <li class="Head-portrait-tx"></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!--快速登陆结束-->
+            </div>
+        </div>
+        <div class="body-footer">
+            <span class="copy-text">Copyright@2018. All rights reserved.&nbsp;&nbsp;&nbsp;&nbsp;发布单位：北京航星永志科技有限公司</span>
+        </div>
+    </div>
+</body>
+
+<script src="~/Sign-in/js/scroll/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="~/Sign-in/js/Sign-in.js"></script>
+<script type="text/javascript">
+    //$(".QR-bj .place-list >li>a").on("click", function () {
+    //    $(".address-name").html($(this).data("value"));
+    //    $(this).parents(".QR-bj").fadeOut(200);
+    //})
+
+    //$(".place-container").mCustomScrollbar({
+    //    axis: "y",
+    //    theme: "minimal-dark"
+    //});
+
+
+
+    mini.parse();
+    //var area = mini.get("areaID");//
+
+    var loginObj = {
+        login: function () {
+            var uid = mini.get("uid").getValue();
+            var pwd = mini.get("pwd").getValue();
+            //所属区域代码
+            var areaCode1 = "";
+            //var selectarea = area.getSelectedNode();
+            //if (selectarea != null) {
+            //    areaCode1 = selectarea.Code;
+            //}
+
+            var aFlag = $("#cFlag").val();
+            if (aFlag == "0") {
+                var v = mini.get("btnEdit1").getValue();
+                if (v == "") {
+                    mini.alert("请选择管档单位", "提示");
+                    return;
+                }
+                for (i = 0; i < tData.length; i++) {
+                    if (v == tData[i].ID) {
+                        areaCode1 = tData[i].Code;
+                        break;
+                    }
+                }
+            } else {
+                areaCode1 = mini.get("btnEdit1").getValue();
+            }
+
+
+
+            $.ajax({
+                url: "/Account/LoginValidate",
+                type: "Post",
+                data: { uid: uid, password: pwd, areaCode: areaCode1 },
+                success: function (result) {
+                    result = mini.decode(result);
+                    if (result.Key == "HX00") {
+                        window.location.href = "/Home/Index";
+                    } else {
+                        mini.alert(result.Value);
+                    }
+
+                }
+            });
+        }
+    };
+
+    $(function () {
+        //var data = area.getList();//
+        //area.setValue(data[0]);//
+
+
+        $("#uid").bind("keydown", function (e) {
+            if (e.keyCode == 13) {
+                loginObj.login();
+            }
+        });
+
+        $("#pwd").bind("keydown", function (e) {
+            if (e.keyCode == 13) {
+                loginObj.login();
+            }
+        });
+        if ("@ViewData["AreaName"]" != "") {
+            $("#cFlag").val("1");
+            mini.get("btnEdit1").setValue("@Html.Raw(ViewData["AreaCode"])")
+            mini.get("btnEdit1").setText("@Html.Raw(ViewData["AreaName"])");
+        } else {
+            $("#cFlag").val("0");
+        }
+
+
+    });
+    function onButtonEdit(e) {
+        var buttonEdit = e.sender;
+        var win = new TreeSelectWindow();
+        win.set({
+            url: "/SystemManage/Area/GetAllAreasJsons",
+            title: "选择管档单位",
+            width: 350,
+            height: 350,
+            allowResize: false
+        });
+
+        win.show();
+
+        //初始化数据
+        win.setData(null, function (action) {
+            if (action == "ok") {
+                //获取数据
+                var data = win.getData();
+                if (data) {
+                    buttonEdit.setValue(data.id);
+                    buttonEdit.setText(data.text);
+
+                }
+            }
+        });
+    }
+
+    var navigatorName = "Microsoft Internet Explorer";
+    if (!!window.ActiveXObject || "ActiveXObject" in window) {
+        //$('#pwd').css('padding', '8px 0')
+        $('.mini-textbox-border').css('padding', '2px 0')
+        $('.mini-placeholder-label').css('top','2px')
+    } else {
+        //$('.Sign-in-content-bottom-right .sr-input .account .input-right .z-h').css('padding', '9px 0')
+        $('.mini-buttonedit .mini-buttonedit-input').css('padding','7px 0')
+    }
+
+    $('.mini-textbox-input').each(function (index, item) {
+
+        $(this).focus(function () {
+            $(this).parents('.account').css('border', '1px solid #379dce')
+        }).blur(function () {
+            $(this).parents('.account').css('border', '1px solid #acacac')
+        })
+
+    })
+
+    //当input为readonly时，使input在ie状态下光标不出现，即不能点击input框
+
+</script>
+</html>
