@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewData["Title"] = "AddOrUpdate";
+    //新增用户
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+@using Hasng.CadreFile.WebApp
+<style type="text/css">
+    html, body {
+        font-size: 10px;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        height: 100%;
+        /*overflow: hidden;*/
+    }
+
+    .menuTitle {
+        border-collapse: collapse;
+        font-family: 宋体;
+        font-size: 2em;
+        margin-bottom: 1px;
+    }
+
+        .menuTitle td {
+            border:0px solid #2F2F2F;
+            margin: 0px;
+        }
+
+    .asLabel .mini-textbox-border,
+    .asLabel .mini-textbox-input,
+    .asLabel .mini-buttonedit-border,
+    .asLabel .mini-buttonedit-input,
+    .asLabel .mini-textboxlist-border {
+        border: 0;
+        background: none;
+        cursor: default;
+    }
+
+    .asLabel .mini-buttonedit-button,
+    .asLabel .mini-textboxlist-close {
+        display: none;
+    }
+
+    .asLabel .mini-textboxlist-item {
+        padding-right: 8px;
+    }
+
+    .mini-textbox-border {
+        background: white;
+        border: solid 0px #a5acb5;
+        width: auto;
+        height: 22px;
+        display: block;
+        position: relative;
+        overflow: hidden;
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+    /*后期新增样式*/
+    .menuTitle tbody > tr > td {
+        color: #666666;
+        font-size: 15px;
+        height: 40px;
+    }
+
+    .con-padding {
+        padding: 0 ;
+    }
+
+    .menuTitle td {
+        border: 0px solid #d2d2d2;
+    }
+
+</style>
+<div id="form1" class="mini-fit">
+    <input name="ID" class="mini-hidden" />
+    <table class="menuTitle" style="width:100%;  margin:0px auto 0;">
+        <tr>
+            <td style="width:100px;text-align:center;">角色选择：</td>
+            <td class="con-padding" colspan="3">
+                <input id="Roles" class="mini-checkboxlist" repeatItems="5" repeatLayout="table" textField="Name" valueField="ID"  url="/PowerManage/Role/GetRoleJson" />
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="mini-toolbar bottom-btn">
+    <a class="mini-button minibutton-save button-pre-bn" onclick="selectRoleObj.btnSave" style="width:60px;margin-right:20px;">保存</a>
+    <a class="mini-button minibutton-save button-pre-bn" onclick="selectRoleObj.btnCancel" style="width:60px;">取消</a>
+</div>
+<script type="text/javascript">
+    //miniui初始化
+    mini.parse();    
+
+    //提交、取消、关闭事件
+    var selectRoleObj = {
+        form : new mini.Form("#form1"),
+        //角色选择控件
+        Roles: mini.get("Roles"),
+        //用户ID
+        userID:null,
+        //反查，接收传递过来的数据，初始化
+        setData: function (data) {            
+            //跨页面传递的数据对象，克隆后才可以安全使用
+            data = mini.clone(data);
+
+            selectRoleObj.userID = data.ID;
+
+            selectRoleObj.Roles.setValue(data.RoleIDs.toLowerCase());            
+        },
+        //窗口关闭
+        CloseWindow: function (action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        },
+        //保存数据
+        btnSave: function (e) {
+            var rolesVal = selectRoleObj.Roles.getValue();
+            if (!!rolesVal)
+            {
+                selectRoleObj.form.loading("保存数据中，请稍后......");
+                $.ajax({
+                    url: "/PowerManage/UserRole/InsertBatch",
+                    type: 'post',
+                    data: { RoleIds: rolesVal, UserID: selectRoleObj.userID },
+                    cache: false,
+                    success: function (text) {
+                        selectRoleObj.form.unmask();
+
+                        mini.alert("保存成功！", "提示", function () {
+                            selectRoleObj.CloseWindow();
+                        });
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        selectRoleObj.form.unmask();
+                        mini.alert(jqXHR.responseText);
+                    }
+                });
+            }
+        },
+        //取消
+        btnCancel: function (e) {
+            selectRoleObj.CloseWindow("cancel");
+        }
+    };
+</script>

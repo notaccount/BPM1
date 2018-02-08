@@ -21,7 +21,7 @@ namespace BPM.Repository
         }
 
 
-        public virtual T GetById(int id)
+        public virtual T GetById(Guid id)
         {
             return _dbContext.Set<T>().Find(id);
         }

@@ -1,0 +1,148 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+@using Hasng.CadreFile.WebApp
+<style>
+    #MenuID {
+        padding-top: 7px
+    }
+    .bottom-btn {
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+    }
+   
+</style>
+<div id="form1" class="mini-fit">
+    <input id="ID" name="ID" class="mini-hidden" />
+    <input id="WorkbenchID" name="WorkbenchID" class="mini-hidden" />
+    <div class="mini-toolbar" style="border:none;;">
+        <a class="mini-button" iconCls="icon-edit" plain="true" onclick="WorkbenchMenuObj.btnCheckAll">全选</a>
+        <a class="mini-button" iconCls="icon-remove" plain="true" onclick="WorkbenchMenuObj.btnUncheckAll">取消全选</a>
+        <a class="mini-button" iconCls="icon-save" onclick="WorkbenchMenuObj.btnSave" plain="true">保存</a>
+    </div>
+    <ul id="tree" class="mini-tree" style="padding:5px;"
+        showTreeIcon="true" textField="text" idField="id" parentField="pid" resultAsTree="false" checkRecursive="false" autoCheckParent="false"
+        showCheckBox="true" allowSelect="false" enableHotTrack="false" expandOnLoad="true"></ul>
+    @*<table class="table-sty">
+        <tr>
+            <td class="editLeftWidth label-item">菜单ID：</td>
+            <td class="editRightWidth">
+                <input name="MenuID" id="MenuID" class="mini-treeselect" url="/PowerManage/Workbench/GetMenusJsons" multiSelect="false" valueFromSelect="false"
+                       textField="Name" valueField="ID" parentField="ParentID" allowInput="true"
+                       showFolderCheckBox="false" expandOnLoad="true" width="98%" popupHeight="150" />
+            </td>
+        </tr>
+        <tr>
+            <td class="editLeftWidth label-item">样式ID：</td>
+            <td class="editRightWidth">
+                <input name="StyleID" class="mini-combobox" textField="text" valueField="id" value="true" showNullItem="false" allowInput="false" required="true" requiredErrorText="状态必填" data="[{id:true,text:'是'},{id:false,text:'否'}]" width="98%" />
+            </td>
+        </tr>
+        <tr>
+            <td class="editLeftWidth label-item">是否有效：</td>
+            <td class="editRightWidth">
+                <input name="U_IsValid" class="mini-combobox" textField="text" valueField="id" value="true" showNullItem="false" allowInput="false" required="true" requiredErrorText="是否有效必填" data="[{id:false,text:'否'},{id:true,text:'是'}]" width="98%;" />
+            </td>
+        </tr>
+    </table>*@
+</div>
+<div class="mini-toolbar bottom-btn">
+    <a class="mini-button minibutton-save button-pre-bn" onclick="WorkbenchMenuObj.btnSave()">保存</a>
+    <a class="mini-button minibutton-save button-next-bn" onclick="WorkbenchMenuObj.btnCancel()">取消</a>
+</div>
+<script type="text/javascript">
+
+    mini.parse();
+
+    var WorkbenchMenuObj = {
+        form: new mini.Form("#form1"),
+        tree: mini.get("tree"),
+        //反查
+        SetData: function (data) {
+            if (data.action == "new") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
+                mini.get("WorkbenchID").setValue(data.WorkbenchID);
+                var url = "/PowerManage/Workbench/GetWorkbenchMenuJson?&workbenchid=" + data.WorkbenchID;
+                WorkbenchMenuObj.tree.load(url);
+                WorkbenchMenuObj.tree.setCheckRecursive(true);
+            };
+            if (data.action == "edit") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
+                $.ajax({
+                    url: "/PowerManage/Workbench/GetEntityMenu?&id=" + data.id,
+                    cache: false,
+                    success: function (text) {
+                        var o = mini.decode(text);
+                        WorkbenchMenuObj.form.setData(o);
+                        WorkbenchMenuObj.form.setChanged(false);
+                    }
+                });
+            }
+        },
+        //全选事件
+        btnCheckAll: function () {
+            var nodes = WorkbenchMenuObj.tree.getAllChildNodes(WorkbenchMenuObj.tree.getRootNode());
+            WorkbenchMenuObj.tree.checkNodes(nodes);
+        },
+        //取消全选事件
+        btnUncheckAll: function () {
+            var nodes = WorkbenchMenuObj.tree.getAllChildNodes(WorkbenchMenuObj.tree.getRootNode());
+            WorkbenchMenuObj.tree.uncheckNodes(nodes);
+        },
+        //保存
+        btnSave: function () {
+            //WorkbenchMenuObj.form.validate();
+            //if (WorkbenchMenuObj.form.isValid() == false) return;
+            //var formData = WorkbenchMenuObj.form.getData();
+            var menus = WorkbenchMenuObj.tree.getValue(false);         
+            $.ajax({
+                url: "/PowerManage/Workbench/InsertOrUpdateMenu",
+                type: 'post',
+                data: { data: menus, WorkbenchID: mini.get("WorkbenchID").getValue() },
+                cache: false,
+                success: function (text) {
+                    WorkbenchMenuObj.CloseWindow("save");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.alert(jqXHR.responseText);
+                    WorkbenchMenuObj.CloseWindow();
+                }
+            });
+        },
+        //窗口关闭
+        CloseWindow: function (action) {
+            /*if ((action == "cancel" || action == "close") && WorkbenchMenuObj.form.isChanged()) {
+                mini.confirm("数据被修改了，是否先保存？", "提示",
+                    function (action) {
+                        if (action != "ok") {
+                            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                            else window.close();
+                        }
+                    });
+            }
+            else {
+                if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                else window.close();
+            }*/
+
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        },
+        //取消
+        btnCancel: function () {
+            WorkbenchMenuObj.CloseWindow("cancel");
+        },
+        //关闭
+        onCloseClick: function (e) {
+            var obj = e.sender;
+            obj.setText("");
+            obj.setValue("");
+        }
+
+
+    };
+</script>

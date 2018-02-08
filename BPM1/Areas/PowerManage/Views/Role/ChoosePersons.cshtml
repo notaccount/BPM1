@@ -1,0 +1,185 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+
+@using Hasng.CadreFile.WebApp
+
+<style>
+    .mini-grid-headerCell:last-child, .mini-grid-cell:last-child {
+        border-right: none;
+    }
+
+    .listcont{
+        left:0;
+        right:0;
+    }
+    #form1.searchBox + .mini-toolbar {
+        padding: 10px 0 !important;
+    }
+</style>
+<div class="listcont window-listcont">
+    <div class="listcontainer listcontainer-noborder">
+        <div style="width:100%;position:relative;">
+            <div id="form1" class="searchBox">
+                @HtmlEx.UserMultipleSelect("UserAdd", "添加", "UserObj.btnAdd")
+                <a class="mini-button gules" plain="true" onclick="UserObj.btnDel()">删除</a>
+            </div>
+            <div class="mini-toolbar button-right" style="padding:2px;border:0;width:310px;">
+                <input id="txtKey" class="mini-textbox" emptyText="请输入姓名或账户" style="width:250px;float:left;" onenter="UserObj.btnSearch()" />
+                <a class="mini-button search-button-my btn-right-last" iconCls="icon-download" plain="true" onclick="UserObj.btnSearch()">查询</a>
+            </div>
+        </div>
+        <div class="mini-fit">
+            <div id="grid" class="mini-datagrid"  allowMoveColumn="false" style="width:100%;height:100%;" idField="ID"
+                 url="/PowerManage/Users/GetPagerJsonRole" showFilterRow="false" multiSelect="true"  sortField="U_SortNo" allowAlternating="true">
+                <div property="columns">
+                    <div type="indexcolumn"></div>
+                    <div type="checkcolumn"></div>
+                    <div field="Cn" width="120" headerAlign="center" align="left" allowSort="false">姓名</div>
+                    <div field="UID" width="120" headerAlign="center" align="left" allowSort="false">账户</div>
+                    <div field="Station" width="120" headerAlign="center" align="left" allowSort="false">岗位</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //miniui初始化
+    mini.parse();
+
+
+    var UserObj = {
+        roleId:null,
+        //展示数据控件
+        grid: mini.get("grid"),
+        //查询关键字
+        txtKey: mini.get("txtKey"),
+        //反查
+        setData: function (data) {
+            if (data.action == "selectUser") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
+                UserObj.roleId = data.id;
+
+                UserObj.btnSearch();
+            }
+        },
+        //人员选择
+        btnAdd: function (data1) {
+            $.ajax({
+                url: "/PowerManage/UserRole/Insert",
+                type: 'post',
+                data: { users: data1, RoleId: UserObj.roleId },
+                cache: false,
+                success: function (text) {
+                    UserObj.grid.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.alert(jqXHR.responseText);
+                }
+            });
+        },
+        //删除
+        btnDel: function () {
+            var rows = UserObj.grid.getSelecteds();
+            if (rows.length > 0) {
+                
+                hasng.DelConfirm(function () {
+                    var Parameter = [];
+                    for (var i = 0; i < rows.length; i++){ 
+
+                        //第一条
+                        if (i == 0) {
+                            Parameter.push({
+                                LeftBrace: '(',
+                                paramName: 'UserID',
+                                paramValue: rows[i].UserID,
+                                Operation: 'Equal',
+                                Logic: "OR"
+                            });
+                        }
+
+                        //中间条目
+                        if (i != 0 && i != rows.length - 1){
+                            Parameter.push({
+                                paramName: 'UserID',
+                                paramValue: rows[i].UserID,
+                                Operation: 'Equal',
+                                Logic: "OR"
+                            });
+                        }
+
+                        //最后一条
+                        if (i == rows.length - 1) {
+                            Parameter.push({
+                                RightBrace: ")",
+                                paramName: 'UserID',
+                                paramValue: rows[i].UserID,
+                                Operation: 'Equal',
+                                Logic: "AND"
+                            });
+                        }
+                    }
+                    Parameter.push({
+                        paramName: 'RoleId',
+                        paramValue: UserObj.roleId,
+                        Operation: 'Equal',
+                        Logic: "AND"
+                    });
+
+
+                    $.ajax({
+                        url: "/PowerManage/UserRole/Delete",
+                        type: 'post',
+                        data: { parameterJson: JSON.stringify(Parameter) },
+                        cache: false,
+                        success: function (text) {
+                            mini.alert("删除成功", "提示", function () {
+                                UserObj.grid.reload();
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            mini.alert(jqXHR.responseText);
+                        }
+                    });
+                });
+            } else {
+                hasng.Alert();
+            }
+        },
+        //查询按钮
+        btnSearch: function () {
+            var Parameter = [];
+
+            //输入账户或者姓名都可以进行查询
+            var vkeyValue = UserObj.txtKey.value;
+            if (!!vkeyValue) {
+                Parameter.push({
+                    LeftBrace: '(',
+                    paramName: 'UID',
+                    paramValue: vkeyValue,
+                    Operation: 'like',
+                    Logic: "OR"
+                });
+                Parameter.push({
+                    RightBrace: ")",
+                    paramName: 'Cn',
+                    paramValue: vkeyValue,
+                    Operation: 'like',
+                    Logic: "AND"
+                });
+            }
+
+            Parameter.push({
+                paramName: 'RoleId',
+                paramValue: UserObj.roleId,
+                Operation: 'Equal',
+                Logic: "AND"
+            });
+            UserObj.grid.load({ ParameterJson: JSON.stringify(Parameter) });
+        }
+    };
+    
+</script>

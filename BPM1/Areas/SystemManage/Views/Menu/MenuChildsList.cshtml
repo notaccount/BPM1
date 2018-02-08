@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+<style>
+    .mini-grid-headerCell:last-child, .mini-grid-cell:last-child {
+        border-right: none;
+    }
+
+    .mini-toolbar {
+        padding: 8px 0 !important;
+    }
+    .listcont{
+        left:0;
+        right:0;
+        top:0;
+        bottom:0;
+    } 
+    .mini-toolbar{
+        border:none;
+    }
+</style>
+<div class="listcont window-listcont">
+    <div class="listcontainer listcontainer-noborder" style="position:absolute;top: 8px;left: 8px;right: 8px;bottom: 8px;">
+        <div class="mini-toolbar" style="border-bottom:0;padding:0px;">
+            <a class="mini-button green" iconCls="icon-add" plain="true" onclick="MenuChildsobj.btnAdd" style="margin-left:8px;">新增</a>
+            <a class="mini-button gules" iconCls="icon-remove" plain="true" onclick="MenuChildsobj.btnDel">删除</a>
+            <a class="mini-button Pink" iconCls="icon-save" onclick="MenuChildsobj.btnSave" plain="true">保存</a>
+        </div>
+        <div class="mini-fit">
+            <input type="hidden" name="MenuID" class="mini-hidden" />
+            <div id="grid" class="mini-datagrid"  allowMoveColumn="false" style="width:100%;height:100%;"
+                 url="/SystemManage/Menu/GetMenusChildsPagerJson" idField="ID"
+                 allowResize="false" pageSize="20" allowCellEdit="true" allowCellSelect="true" multiSelect="true">
+                <div property="columns">
+                    <div type="indexcolumn" width="40">序号</div>
+                    <div name="name" field="Name" headerAlign="center" allowSort="false" width="150">
+                        名称
+                        <input property="editor" class="mini-textbox" style="width:100%;" minWidth="150" />
+                    </div>
+                    <div name="code" field="Code" width="100" headerAlign="center" allowSort="false">
+                        编码
+                        <input property="editor" class="mini-textbox" style="width:100%;" minWidth="100" />
+                    </div>
+                    <div name="path" field="Path" headerAlign="center" width="500" allowSort="false">
+                        路径
+                        <input property="editor" class="mini-textbox" style="width:100%;" minWidth="500" />
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+    </div>
+        <script type="text/javascript">
+            //miniui初始化
+            mini.parse();
+
+            var MenuChildsobj = {
+                //展示数据控件
+                grid: mini.get("grid"),
+                //增加
+                btnAdd: function () {
+                    var newRow = { MenuID: mini.getbyName("MenuID").value };
+                    MenuChildsobj.grid.addRow(newRow, 0);
+                    MenuChildsobj.grid.beginEditCell(newRow, "Name");
+                },
+                //删除
+                btnDel: function () {
+                    //var rows = MenuChildsobj.grid.getSelecteds();
+                    var rows = MenuChildsobj.grid.getSelected();
+                    if (rows) {
+                        hasng.DelConfirm(function () {
+                            $.ajax({
+                                url: "/SystemManage/Menu/MenuChildsDelete",
+                                data: { "ID": rows.ID },
+                                type: "Post",
+                                success: function (status) {
+                                    if (status) {
+                                        mini.alert("删除成功！");
+                                        MenuChildsobj.grid.removeRows(rows, true);
+                                        MenuChildsobj.grid.reload();
+                                    }
+                                    else { mini.alert("删除失败！"); }
+                                },
+                                error: function () {
+                                    mini.alert("出现异常！");
+                                }
+                            });
+                        });
+                    } else {
+                        hasng.Alert();
+                    }
+                },
+                //保存数据
+                btnSave: function () {
+                    var data = MenuChildsobj.grid.getChanges();
+                    var json = mini.encode(data);
+                    MenuChildsobj.grid.loading("保存中，请稍后......");
+                    $.ajax({
+                        url: "/SystemManage/Menu/MenusChildsAddOrUpdate",
+                        data: { data: json },
+                        type: "post",
+                        success: function (text) {
+                            mini.alert("保存成功！", "", function () { $('.mini-button').removeClass('icon-style'); });
+                            MenuChildsobj.grid.reload();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert(jqXHR.responseText);
+                        }
+                    });
+                },
+                //反查
+                setData: function (data) {
+                    //跨页面传递的数据对象，克隆后才可以安全使用
+                    data = mini.clone(data);
+
+                    mini.getbyName("MenuID").setValue(data.MenuID);
+
+                    MenuChildsobj.grid.load({
+                        ParameterJson: JSON.stringify([{
+                            paramName: 'MenuID',
+                            paramValue: data.MenuID,
+                            Operation: 'Equal'
+                        }
+                        ])
+                    });
+                }
+            };
+        </script>

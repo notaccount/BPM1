@@ -1,0 +1,221 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+
+
+<style>
+    .mini-grid-headerCell:last-child, .mini-grid-cell:last-child {
+        border-right: none;
+    }
+
+    .mini-toolbar {
+        padding: 10px 0 10px 0 !important;
+    }
+
+    .mini-panel-border {
+        border-top: 1px solid #dfdfdf;
+    }
+</style>
+
+<div class="listcont">
+    <div class="listcontainer" style="position:absolute;top: 0px;left: 12px;right: 12px;bottom: 12px;">
+        <div class="mini-toolbar" style="padding:2px;border:0;">
+            <a class="mini-button green" plain="true" href="javascript:menuObj.btnAdd()" style="margin-left:0px;">新增</a>
+            <a class="mini-button Pink" plain="true" href="javascript:menuObj.btnEdit()">编辑</a>
+            <a class="mini-button gules" plain="true" href="javascript:menuObj.btnDel()">删除</a>
+            <a class="mini-button Blue" plain="true" href="javascript:menuObj.btnSort()">排序</a>
+            <a class="mini-button" plain="true" href="javascript:menuObj.btnMenuChilds()">全部页面</a>
+
+        </div>
+
+        <div class="mini-fit">
+            <div id="grid" class="mini-treegrid" allowUnselect="true" style="width:100%;height:100%;"
+                 url="/SystemManage/Menu/GetMenusJson" showTreeIcon="true"
+                 treeColumn="Name" idField="ID" parentField="ParentID" sortField="CreateTime" expandOnLoad="false" resultAsTree="false"
+                 showCheckBox="false" checkRecursive="true">
+                <div property="columns">
+                    <div type="indexcolumn"></div>
+                    <div field="Name" name="Name" width="170" headerAlign="center" align="left" allowSort="false">菜单名称</div>
+                    <div field="Code" width="100" headerAlign="center" align="left" allowSort="false">编码</div>
+                    <div field="Type" width="80" align="left" headerAlign="center" allowSort="false" renderer="cacheCode.renderer">分类</div>
+                    <div field="Path" width="400" headerAlign="center" align="left" allowSort="false">访问地址</div>
+                    <div field="IsEnable" width="80" headerAlign="center" align="left" allowSort="false">是否启用</div>
+                    <div field="IsSuperUser" width="80" headerAlign="center" align="left" allowSort="false">是否超级菜单</div>
+                    <div field="IsShow" width="80" headerAlign="center" align="left" allowSort="false">是否显示</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //miniui初始化
+    mini.parse();
+
+    //增、编.....数据
+    var menuObj = {
+        //展示数据控件
+        grid: mini.get("grid"),
+        //新增数据
+        btnAdd: function () {
+            var maxIndex = 1;
+            var row = menuObj.grid.getSelected();
+            var menuId = "";
+            if (!!row) { menuId = row.ID; }
+            hasng.WinOpen({
+                url: "/SystemManage/Menu/AddView",
+                title: "新增菜单", width: 655, height: 350,
+                onload: function (iframe) {
+
+                    var data = { action: "add", id: menuId };
+                    iframe.contentWindow.menuAddObj.initData(data);
+                },
+                ondestroy: function (action) {
+                    if (action == "cancel" || action == "close") { }
+                    else
+                        menuObj.grid.reload();
+                    //窗体销毁时表格按钮去掉自定义添加的样式
+                }
+            });
+        },
+        //编辑数据
+        btnEdit: function () {
+            var row = menuObj.grid.getSelected();
+            if (row) {
+                hasng.WinOpen({
+                    url: "/SystemManage/Menu/AddView",
+                    title: "编辑菜单", width: 655, height: 350,
+                    onload: function (iframe) {
+
+                        var data = {
+                            action: "edit",
+                            id: row.ID
+                        };
+                        iframe.contentWindow.menuAddObj.initData(data);
+                    },
+                    ondestroy: function (action) {
+                        menuObj.grid.reload();
+                        //menuObj.grid.reload();
+                        //if (action == "cancel" || action == "close") { }
+                        //else
+                        //    menuObj.grid.reload();
+                        ////窗体销毁时表格按钮去掉自定义添加的样式
+                        //$('.mini-button').removeClass('icon-style');
+                    }
+                });
+            } else {
+                hasng.Alert();
+            }
+        },
+        //删除数据
+        btnDel: function () {
+            var row = menuObj.grid.getSelected();
+            if (row) {
+                if (typeof (row.children) != "undefined" && row.children.length > 0) {
+                    mini.alert("所选数据下有从属数据，禁止删除！");
+                    return;
+                }
+                hasng.DelConfirm(function () {
+                    var id = row.ID;
+                    menuObj.grid.loading("操作中，请稍后......");
+                    $.ajax({
+                        url: "/SystemManage/Menu/Del",
+                        data: { "ID": row.ID },
+                        type: "Post",
+                        success: function (text) {
+                            menuObj.grid.reload();
+                        },
+                        error: function () {
+                            mini.alert("出现异常！");
+                        }
+                    });
+                });
+
+            } else {
+                hasng.Alert();
+            }
+        },
+        //排序
+        btnSort: function () {
+            var row = menuObj.grid.getSelected();
+            var Parameter = [];
+            if (!!row) {
+                Parameter.push({
+                    paramName: 'ID5',
+                    paramValue: row.ID,
+                    Operation: 'Equal',
+                    Logic: "AND"
+                });
+            } else {
+                Parameter.push({
+                    paramName: 'ID5',
+                    paramValue: '',
+                    Operation: 'Null',
+                    Logic: "AND"
+                });
+            }
+            var obj = {
+                tablename: "Power_Menu",  //被排序的表名称
+                ParameterJson: mini.encode(Parameter)
+            };
+            //传入参数，回掉函数
+            orderObj.showWin(obj, function () {
+                menuObj.grid.load();
+                menuObj.btnUpdateCache();
+            })
+        },
+        btnUpdateCache: function () {
+            $.ajax({
+                url: "/SystemManage/Menu/UpdateCache",
+                type: "Post",
+                success: function (status) {
+                    if (status) {
+                        //mini.alert("删除成功。", "提示");
+                        menuObj.grid.reload();
+                    }
+                    //else { mini.alert("删除失败。", "提示"); }
+                },
+                error: function () {
+                    mini.alert("出现异常！");
+                }
+            });
+        },
+        //导出
+        btnExport: function () { },
+        //导入
+        btnImport: function () { },
+        //子菜单
+        btnMenuChilds: function () {
+            var rows = menuObj.grid.getSelecteds();
+            if (rows.length > 0) {
+                hasng.WinOpen({
+                    url: "/SystemManage/Menu/MenuChildsList",
+                    title: "子页面集合", width: 800, height: 420,
+                    onload: function (iframe) {
+
+                        var data = {
+                            MenuID: rows[0].ID
+                        };
+                        iframe.contentWindow.MenuChildsobj.setData(data);
+                    },
+                    ondestroy: function (action) {
+                        //窗体销毁时表格按钮去掉自定义添加的样式
+                    }
+                });
+            }
+            else {
+                hasng.Alert();
+            }
+        }
+
+    }
+
+    //页面加载时执行事件
+    //页面初始化方法
+    //$(function () {
+    //    //表格数据加载
+    //    menuObj.grid.load();
+    //});
+</script>

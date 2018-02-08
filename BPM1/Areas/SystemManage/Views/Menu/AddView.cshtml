@@ -1,0 +1,264 @@
+﻿
+@using Hasng.CadreFile.WebApp
+@{
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+<link type="text/css" href="/page/iconfont/iconfont.css" rel="stylesheet" />
+
+
+<style>
+    .bottom-btn {
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+    }
+</style>
+<div id="form1" class="mini-fit">
+    <input type="hidden" name="ID" class="mini-hidden" />
+    <table  class="table-sty">
+        <tr>
+            <td class="editLeftWidth label-item">菜单名称：</td>
+            <td class="editRightWidth"><input name="Name" class="mini-textbox" required="true" requiredErrorText="模块不能为空" vtype="maxLength:200"  /></td>
+            <td class="editLeftWidth label-item">上级菜单：</td>
+            <td class="editRightWidth">
+                <input id="ParentID" name="ParentID" class="mini-treeselect" url="/SystemManage/Menu/GetLeftMenuJsons" multiSelect="false" valueFromSelect="false"
+                       textField="Name" valueField="ID" parentField="ParentID" allowInput="true"
+                       showFolderCheckBox="false" expandOnLoad="true"  popupHeight="150"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="editLeftWidth label-item">菜单分类：</td>
+            <td class="editRightWidth">
+                
+            </td>
+            <td class="editLeftWidth label-item">样式：</td>
+            <td class="editRightWidth"><i id="spanStyle" style="padding-right:8px" class="icon iconfont " v=""></i><a href="javascript:menuAddObj.btnCheckIcom()" style="text-decoration:none; color:#379dce;">选择</a>
+            <a href="javascript:menuAddObj.btnClearIcon()" style="text-decoration:none; color:#379dce;">清除</a>        
+    @*<input name="Style" onbuttonclick="menuAddObj.btnCheckIcom()"  class="mini-buttonedit" textName="" />*@</td>
+        </tr> 
+        <tr>
+            <td class="editLeftWidth label-item">编码：</td>
+            <td><input name="Code" id="Code" class="mini-textbox" required="true" requiredErrorText="显示顺序必填" blur="menuAddObj.validataCodeOnly" /></td>
+            <td class="editLeftWidth label-item">是否启用：</td>
+            <td>
+                <input id="IsEnable" name="IsEnable" class="mini-combobox" required="true" textField="text" valueField="id" data="[{id:false,text:'否'},{id:true,text:'是'}]"  />
+            </td>
+        </tr>
+        <tr>     
+            <td class="editLeftWidth label-item">是否为超级菜单：</td>
+            <td >
+                <input id="IsSuperUser" name="IsSuperUser" class="mini-combobox" textField="text" valueField="id" value="否" data="[{id:false,text:'否'},{id:true,text:'是'}]" />
+            </td>
+            <td class="editLeftWidth label-item">是否显示：</td>
+            <td >
+                <input id="IsShow" name="IsShow" class="mini-combobox"  textField="text" valueField="id" value="是" data="[{id:true,text:'是'},{id:false,text:'否'}]" />
+            </td>
+        </tr>
+        <tr>
+            <td class="editLeftWidth label-item">访问地址：</td>
+            <td colspan="3"><input name="Path" class="mini-textarea" required="true" requiredErrorText="访问地址必填" /></td>
+        </tr>
+    </table>
+</div>
+<div class="mini-toolbar bottom-btn">
+    <a class="mini-button minibutton-save button-pre-bn"   onclick="menuAddObj.btnSave()" >保存</a>
+    <a class="mini-button minibutton-save button-pre-bn"   onclick="menuAddObj.btnCancel()">取消</a>
+</div>
+
+
+
+<script type="text/javascript">
+    //miniui初始化
+    mini.parse();
+
+    //提交、取消、关闭事件
+    var menuAddObj = {
+        //操作类型
+        actionType: "",
+        //分类控件
+        type: mini.get("Type"),
+        //是否启用控件
+        IsEnable: mini.get("IsEnable"),
+        //接收传递过来的数据，初始化
+        initData: function (data) {
+            var form = new mini.Form("#form1");
+            menuAddObj.actionType = data.action;
+            if (data.action == "edit") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
+                $.ajax({
+                    url: "/SystemManage/Menu/GetModel?id=" + data.id,
+                    cache: false,
+                    success: function (text) {
+                        var o = mini.decode(text);
+                        form.setData(o);
+                        form.setChanged(false);
+
+                        $("#spanStyle").addClass(o.Style);
+                        $("#spanStyle").attr("v",o.Style);
+
+                        //编辑时设置编码框为不可编辑
+                        //mini.get("Code").allowInput = false;
+                    }
+                });
+            } else {
+                if (data.id != "" && data.id != null && data.id != undefined) {
+                    mini.getbyName("ParentID").setValue(data.id);
+                }
+
+                //设置分类控件默认选项
+                //var data = menuAddObj.type.getList();
+                //menuAddObj.type.setValue(data[0]);
+                //设置是否启用控件默认选项
+                menuAddObj.IsEnable.setValue("是");
+
+
+            }
+        },
+        //保存数据
+        btnSave: function () {
+            var form = new mini.Form("#form1");
+            form.validate();
+            if (form.isValid() == false) return;       
+            var data = form.getData();      //获取表单多个控件的数据        
+            //if (data.IsEnable == "是") { data.IsEnable = true; }
+            //if (data.IsShow == "是") { data.IsShow = true; }
+            //if (data.IsSuperUser == "是") { data.IsSuperUser = true; }
+
+            data.Style = $("#spanStyle").attr("v");
+
+            //********编辑时验证********//
+            if (menuAddObj.actionType == "edit") {
+                alert("bs");
+                $.ajax({
+                    url: "/SystemManage/Menu/FindOnlyEdit",
+                    type: 'post',
+                    data: { Code: data.Code, ID: data.ID },
+                    cache: false,
+                    success: function (text) {
+                        if (text) {
+                            //验证通过，再执行插入数据
+                            $.ajax({
+                                url: "/SystemManage/Menu/InsertOrUpdate",
+                                type: 'post',
+                                data: { model: data },
+                                cache: false,
+                                success: function (text) {
+                                    menuAddObj.CloseWindow("save");
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    alert("d");
+                                    alert(jqXHR.responseText);
+                                    menuAddObj.CloseWindow();
+                                }
+                            });
+                        }
+                        else {
+                            mini.alert("您输入的编码已存在。");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("e");
+                        alert(jqXHR.responseText);
+                        menuAddObj.CloseWindow();
+                    }
+                });
+            }
+            else {
+                alert("a");
+                //******新增时验证******//
+                //执行保存前，先验证 Code是否唯一
+                $.ajax({
+                    url: "/SystemManage/Menu/FindOnly",
+                    type: 'post',
+                    data: { code: data.Code },
+                    cache: false,
+                    success: function (text) {
+                        if (text) {
+                            //验证通过，再执行插入数据
+                            $.ajax({
+                                url: "/SystemManage/Menu/InsertOrUpdate",
+                                type: 'post',
+                                data: { model: data },
+                                cache: false,
+                                success: function (text) {
+                                    menuAddObj.CloseWindow("save");
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    alert(jqXHR.responseText);
+                                    menuAddObj.CloseWindow();
+                                }
+                            });
+                        }
+                        else {
+                            mini.alert("您输入的编码已存在。");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(jqXHR.responseText);
+                        menuAddObj.CloseWindow();
+                    }
+                });
+            }
+        },
+        //关闭窗口
+        CloseWindow: function (action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        },
+        //取消事件
+        btnCancel: function (e) {
+            menuAddObj.CloseWindow("cancel");
+        },
+        //验证编码唯一
+        validataCodeOnly: function () {
+            var code = mini.get("Code").getValue();
+            $.ajax({
+                url: "/SystemManage/Menu/FindOnly",
+                type: 'post',
+                data: { Code: code },
+                cache: false,
+                async:false,
+                success: function (text) {
+                    if (!text) { mini.alert("您输入的编码已存在。"); return; }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseText);
+                    menuAddObj.CloseWindow();
+                }
+            });
+        },
+        btnCheckIcom: function () {
+            var btnStyle = this;
+            hasng.WinOpen({
+                url: "/SystemManage/Menu/CheckIcon",
+                title: "选择列表",
+                width: '50%',
+                height: '50%',
+                showMaxButton: true,
+                onload: function (iframe) {
+                    
+                },
+                ondestroy: function (action,iframe) {
+
+                        var data = iframe.contentWindow.GetData();
+                        data = mini.clone(data);    //必须
+
+                    //先删除class
+                        var v = $("#spanStyle").attr("v");
+                        $("#spanStyle").removeClass(v);
+                    //再添加class
+                        $("#spanStyle").addClass(data);
+                        $("#spanStyle").attr("v", data);
+                    }
+            });
+        },
+        btnClearIcon: function () {
+            var v = $("#spanStyle").attr("v");
+
+            $("#spanStyle").removeClass(v);
+            $("#spanStyle").attr("v","");
+
+        }
+    };
+</script>

@@ -1,0 +1,107 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+@using Hasng.CadreFile.WebApp
+<style>
+    .bottom-btn {
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+    }
+</style>
+<div id="form1" class="mini-fit">
+    <input id="ID" name="ID" class="mini-hidden" />
+    <table class="table-sty">
+        <tr>
+            <td class="editLeftWidth label-item">工作台名称：</td>
+            <td class="editRightWidth"><input name="Name" class="mini-textbox" required="true" vtype="maxLength:20;" /></td>
+        </tr>
+        <tr>
+    
+            <td class="editLeftWidth label-item">是否系统内置：</td>
+            <td class="editRightWidth">
+                <input name="U_IsSystem" class="mini-combobox" textField="text" valueField="id" value="true" showNullItem="false" allowInput="false" required="true" requiredErrorText="状态必填" data="[{id:true,text:'是'},{id:false,text:'否'}]" width="80%" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-toolbar bottom-btn">
+    <a class="mini-button minibutton-save button-pre-bn" onclick="WorkbenchObj.btnSave()">保存</a>
+    <a class="mini-button minibutton-save button-next-bn" onclick="WorkbenchObj.btnCancel()">取消</a>
+</div>
+<script type="text/javascript">
+
+    mini.parse();
+
+    var WorkbenchObj = {
+        form: new mini.Form("#form1"),
+        //反查
+        SetData: function (data) {
+            if (data.action == "edit") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
+                $.ajax({
+                    url: "/PowerManage/Workbench/GetEntity?&id=" + data.id,
+                    cache: false,
+                    success: function (text) {
+                        var o = mini.decode(text);
+                        WorkbenchObj.form.setData(o);
+                        WorkbenchObj.form.setChanged(false);
+                    }
+                });
+            }
+        },
+        //保存
+        btnSave: function () {
+            WorkbenchObj.form.validate();
+            if (WorkbenchObj.form.isValid() == false) return;
+
+            var formData = WorkbenchObj.form.getData();
+            $.ajax({
+                url: "/PowerManage/Workbench/InsertOrUpdate",
+                type: 'post',
+                data: { data: formData },
+                cache: false,
+                success: function (text) {
+                    WorkbenchObj.CloseWindow("save");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.alert(jqXHR.responseText);
+                    WorkbenchObj.CloseWindow();
+                }
+            });
+        },
+        //窗口关闭
+        CloseWindow: function (action) {
+            /*if ((action == "cancel" || action == "close") && WorkbenchObj.form.isChanged()) {
+                mini.confirm("数据被修改了，是否先保存？", "提示",
+                    function (action) {
+                        if (action != "ok") {
+                            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                            else window.close();
+                        }
+                    });
+            }
+            else {
+                if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                else window.close();
+            }*/
+
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        },
+        //取消
+        btnCancel: function () {
+            WorkbenchObj.CloseWindow("cancel");
+        },
+        //关闭
+        onCloseClick: function (e) {
+            var obj = e.sender;
+            obj.setText("");
+            obj.setValue("");
+        }
+
+        
+    };
+</script>

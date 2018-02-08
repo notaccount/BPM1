@@ -9,12 +9,11 @@ namespace BPM.Models
     public class BaseEntity
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid ID { get; set; }
 
         /// <summary>
         /// 创建时间
         /// </summary>
-        [DisplayName("发表时间")]
         public DateTime CreateTime { get; set; }
 
     }

@@ -1,7 +1,355 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+    Layout = null;
 }
+@using System.Security.Claims;
 
-<h2>Index</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>干部档案管理系统</title>
 
+    @*ui*@
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="/page/common/css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="/page/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="/page/common/malihu-custom-scrollbar-plugin-3.0.7/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet" type="text/css" href="/page/css/index.css" />
+    <script type="text/javascript" src="/miniui/boot.js"></script>
+
+    <style>
+        .content-main-wrapper .content-con {
+            position: relative;
+            height: 100%;
+            background: #d7d7d7;
+        }
+        /*.iframe-content {
+            left:6px!important;
+            right: 6px!important;
+        }*/
+    </style>
+    <!--[if lte ie 9]>
+    <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+
+
+
+
+
+    <style>
+        .content-main-wrapper {
+            top: 0;
+        }
+
+        .menue {
+            top: 0;
+        }
+
+        .wrapper-body {
+            position: absolute;
+            top: 82px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10;
+        }
+
+        .extend {
+            width: 10px;
+            height: 70px;
+            text-align: center;
+            line-height: 70px;
+            font-size: 12px;
+            cursor: pointer;
+            position: absolute;
+            left: 220px;
+            top: 50%;
+            margin-top: -35px;
+            color: #999999;
+            opacity: 1;
+            border: 1px solid #ccc;
+            background: #F9F9F9;
+            display: none;
+            z-index: 1;
+            border-radius: 0 10px 10px 0;
+            transition: width .3s,font-size .3s;
+        }
+
+        .left-menu-area:hover .extend {
+            display: block;
+        }
+
+        .left-menu-area .extend:hover {
+            width: 20px;
+            font-size: 16px;
+            color: #51B6E4;
+        }
+
+        body {
+            position: relative;
+        }
+
+        .head-right {
+            height: 50px;
+            line-height: 50px;
+            position: absolute;
+            right: 0;
+            bottom: 2px;
+            z-index: 2;
+        }
+
+        .content-head .head-left {
+            width: 350px;
+            height: 43px;
+            background-image: url('/page/img/head-bg.png');
+            display: inline-block;
+            margin-top: 18px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .head-left-text {
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+            height: 80px;
+            line-height: 80px;
+            font-size: 18px;
+            color: white;
+            margin-left: 5px;
+        }
+
+        .left-menu-area .menue .head-list-title {
+            height: 40px;
+            line-height: 40px;
+            color: #2279B8;
+            background: #eee;
+        }
+
+        .head-list-title .icon-left {
+            float: left;
+            margin: 0 10px 0 24px;
+            font-size: 17px;
+        }
+
+        .left-menu-area .menue .head-list-title:hover span {
+            color: #2279B8;
+            cursor: default;
+        }
+
+        .imgbox {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #50B5E4;
+            border: 1px solid #A0DBFF;
+        }
+    </style>
+    <script src="~/page/common/jsPlugins/Seasonal-variation-0.01/js/snow.js"></script>
+
+</head>
+<body>
+    <div class="top-wrapper">
+        <div class="wrapper-header top-content-area">
+            <div class="content-head clearfix">
+                <div class="sun-img"></div>
+                <img class="sun-img2" src="~/page/img/topbg2.png" />
+                <div class="head-left">
+
+                </div>
+                <div class="head-right">
+                    <div class="myself-con">
+                        <div class="tool iconbtn" style="cursor:default;">
+                            <span style="width:20px;height:20px;display:inline-block;">
+                                <span class="iconfont icon icon-right icon-zuzhi"></span>
+                            </span>
+                            <span>@ViewData["areaName"]</span>
+                        </div>
+                    </div>
+                    <div class="right-bar">
+                        <span class="border"></span>
+                    </div>
+                    <div class="myself-con icon-hover">
+                        <div class="tool iconbtn tool-btn">
+                            <span style="width:20px;height:20px;display:inline-block;">
+                                <span class="iconfont icon icon-right icon-gerenshezhi1"></span>
+                            </span>
+                            <span>个人设置</span>
+
+                        </div>
+                        <ul class="myself-icon">
+                            <li onclick="obj.showSetting('/PowerManage/Users/ModifyPassWord','修改密码',1000,600)">修改密码</li>
+                            <li onclick="obj.showSetting('/MyManage/UserMenus/Index','个人菜单',800,700)">个人菜单</li>
+                            <li onclick="obj.ImageSetting('/PowerManage/Users/ImageUpload','头像上传',450,450)">头像上传</li>
+                        </ul>
+                    </div>
+                    <div class="right-bar">
+                        <span class="border"></span>
+                    </div>
+                    <div class="quit iconbtn icon-hover" id="logout" onclick="javascript: location='/Account/LogOut'">
+                        <span style="width:20px;height:20px;display:inline-block;">
+                            <span class="iconfont icon icon-right icon-tuichu"></span>
+                        </span>
+                        <span><a href="/Account/LogOut">退出</a></span>
+                    </div>
+                    <div class="user">
+                        <span class="border"></span>
+                        <span class="user-name"></span>
+                        <span class="user-head">
+                            <span class="imgbox">
+                                <img id="img" src="@ViewData["ImageFile"]" alt="" width="35">
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="wrapper-body">
+
+
+            <!--左侧区域-->
+            <div class="left-menu-area">
+                @*<div style="width:220px;height:100%;position:absolute;">
+                        <img src="/page/img/bgnew.png" class="left-bg">
+                    </div>*@
+                <span class="iconfont extend icon slide-icon icon-spread-h-bar"></span>
+                <div class="menue">
+                    <ul class="menu-item-list">
+                        <li class="menu-item-heade">
+                            <div class="head-list-title">
+                                <span class="line-bar line-bar-sty"></span>
+                                <span class="iconfont icon icon-left icon-daohangliebiao-copy"></span>
+                                <span class="big-title">导航列表</span>
+                            </div>
+
+                        </li>
+                        <li class="menu-item-heade">
+                            <div class="head-title shouyetitle head-title-current" onclick="ShowMain();">
+                                <span class="line-bar line-bar-sty"></span>
+                                <span class="iconfont icon icon-left icon-shouye-shouye"></span>
+                                <span class="big-title">首页</span>
+                            </div>
+
+                        </li>
+                        @Html.Raw(ViewBag.menulist)
+                    </ul>
+                </div>
+            </div>
+            <!--右侧区域-->
+            <div class="right-content-area">
+                <div class="content-main-wrapper">
+                    <div class="iframe-content">
+                        <div class="head-position-c">
+                            <h4 class="position-text"></h4>
+                        </div>
+                        <div class="zhezhao"></div>
+                        <div class="zhezhao-sec"></div>
+                        <iframe src="/Home/Main" name="iframeId" id="iframeId" width="100%" height="100%" frameborder="0" allowTransparency="true"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/miniui/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="/page/common/malihu-custom-scrollbar-plugin-3.0.7/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="/page/common/malihu-custom-scrollbar-plugin-3.0.7/jquery.mCustomScrollbar.js"></script>
+    <script type="text/javascript" src="/echarts3.0/echarts.js"></script>
+    <script type="text/javascript" src="/page/js/index.js"></script>
+    <script src="~/js/hasngExtend.js"></script>
+
+
+
+    <script type="text/javascript">
+       // mini.parse();
+        var obj = {
+            showSetting: function (url,name,vWidth,vHeight) {
+                hasng.WinOpen({
+                    url: url,
+                    title: name, width: vWidth, height: vHeight,
+                    onload: function (iframe) {
+
+                    },
+                    ondestroy: function (action) {
+
+                    }
+                });
+                return;
+            },
+            ImageSetting: function (url, name, vWidth, vHeight) {
+                hasng.WinOpen({
+                    url: url,
+                    title: name, width: vWidth, height: vHeight,
+                    onload: function (iframe) {
+
+                    },
+                    ondestroy: function (action) {
+                       // alert(action);
+                        if (action != 'close' && action!='cancel')
+                        {
+                         $("#img").attr({ "src": action});
+                        }
+
+                    }
+                });
+                return;
+            }
+
+        }
+
+        @*$(function () {
+            try {
+                $.connection.hub.url = "@GlobalStatus.Address/signalr";
+                var chat = $.connection.myHub;
+                chat.client.ReceiveMsg = function (tid, tname, sid, sname, message) {
+
+                };
+                chat.client.NowUser = function (currClients) {
+
+                }
+                $.connection.hub.start().done(function () {
+                    //chat.server.register($('#displayname').val());
+                    chat.server.register("@ViewBag.UserId","@ViewBag.AreaCode");
+                    var connId = $.connection.hub.id;
+                    //alert(message);
+                });
+            } catch(ex){
+
+
+            }
+
+        });*@
+        var ShowMain = function () {
+            $("#iframeId").attr("src", "/Home/Main");
+            $(".iframe-content").css("bottom", "52px");
+            $(".head-position-c").css("display", "none");
+        }
+
+
+
+       // 背景动画
+        /*
+        var myDate = new Date();
+        var Month = myDate.getMonth() + 1;
+        if (Month <= 2) {
+            createSnow('', 100)
+        } else if (Month < 6) {
+            createSnow('', 400)
+
+        } else if (Month < 9) {
+            createSnow('', 400)
+        } else if (Month < 12) {
+            createSnow('', 40)
+
+        } else if (Month == 12) {
+            createSnow('', 100)
+        }*/
+    </script>
+</body>
+
+
+</html>

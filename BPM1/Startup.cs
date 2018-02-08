@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BPM.Repository;
 using Microsoft.EntityFrameworkCore;
+using BPM.Models;
+using BPM.Repository.PowerManage;
 
 namespace BPM1
 {
@@ -23,6 +25,9 @@ namespace BPM1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+          
+            
+
             string ConnectionString = Configuration.GetConnectionString("DefaultConnection");
             string ProviderName = Configuration.GetConnectionString("ProviderName");
 
@@ -35,6 +40,8 @@ namespace BPM1
                 services.AddDbContext<DataContext>(options => options.UseSqlite(ConnectionString));
             }
 
+            services.AddScoped(typeof(PowerUserRepository));
+            services.AddScoped(typeof(PowerMenuRepository));
 
             services.AddMvc();
         }
@@ -57,8 +64,12 @@ namespace BPM1
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                   name: "area",
+                   template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
                     name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
             InitializeNetCoreBBSDatabase(app.ApplicationServices);
         }
@@ -71,8 +82,28 @@ namespace BPM1
 
                 if (db.Database != null && db.Database.EnsureCreated())
                 {
-                    //db.PowerUser.AddRange(CreateUserList());
-                    //db.SaveChanges();
+                    Power_User user = new Power_User();
+                    user.ID = Guid.NewGuid();
+                    user.IsSuperUser = true;
+                    user.Cn = "超级管理员";
+                    user.CreateTime = DateTime.Now;
+                    user.PassWord = "123456";
+                    user.UID = "Admin";
+                    db.Power_User.Add(user);
+                    db.SaveChanges();
+
+
+
+                    Power_Area area = new Power_Area();
+                    area.Code = "A001";
+                    area.CreateTime = DateTime.Now;
+                    area.ID = Guid.NewGuid();
+                    area.IsEnable = true;
+                    area.Level = 1;
+                    area.ParentID = Guid.Empty;
+                    area.Title = "北京总公司";
+                    db.Power_Area.Add(area);
+                    db.SaveChanges();
                 }
                 else
                 {

@@ -1,0 +1,119 @@
+
+@{
+    ViewData["Title"] = "AddOrUpdate";
+    //新增编辑角色
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+@using Hasng.CadreFile.WebApp
+<style type="text/css">
+    .asLabel .mini-textbox-border,
+    .asLabel .mini-textbox-input,
+    .asLabel .mini-buttonedit-border,
+    .asLabel .mini-buttonedit-input,
+    .asLabel .mini-textboxlist-border {
+        border: 0;
+        background: none;
+        cursor: default;
+    }
+
+    .asLabel .mini-buttonedit-button,
+    .asLabel .mini-textboxlist-close {
+        display: none;
+    }
+
+    .asLabel .mini-textboxlist-item {
+        padding-right: 8px;
+    }
+</style>
+<div id="form1" class="mini-fit">
+    <input type="hidden" name="ID" class="mini-hidden" />
+    <table  class="table-sty">
+        <tr>
+            <td class="editLeftWidth label-item">角色名称：</td>
+            <td class="editRightWidth"><input name="Name" class="mini-textbox " readOnly="true" style="width:90%;" /></td>
+            <td class="editLeftWidth label-item">工作台：</td>
+            <td  class="editRightWidth">
+                <input name="WorkbenchID" id="WorkbenchID" class="mini-combobox" textField="Name" valueField="ID" required="true"
+                       url="/PowerManage/Workbench/GetWorkBenchAllJson" showNullItem="false" allowInput="false" style="width:96%;" />
+            </td> 
+        </tr>
+     
+    </table>
+</div>
+<div class="mini-toolbar bottom-btn" >
+    <a class="mini-button minibutton-save button-pre-bn" onclick="Roleobj.btnSave()" >保存</a>
+    <a class="mini-button minibutton-save button-next-bn" onclick="Roleobj.btnCancel()" >取消</a>
+</div>
+
+<script type="text/javascript">
+    mini.parse();
+
+    var Roleobj = {
+        //工作台
+        workBench: mini.get("WorkbenchID"),
+        form: new mini.Form("form1"),
+        //反查
+        setData: function (data) {
+            if (data.action == "edit") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
+                $.ajax({
+                    url: "/PowerManage/RoleWorkbench/GetEntity?&id=" + data.id,
+                    cache: false,
+                    success: function (text) {
+                        var o = mini.decode(text);  //json对象转换为object对象
+                        Roleobj.form.setData(o);
+                        Roleobj.form.setChanged(false);
+                    }
+                });
+            } else {
+                //设置状态默认值
+                alert("哈哈哈");
+            }
+        },
+        //保存事件
+        btnSave: function (e) {
+            Roleobj.form.validate();
+            if (Roleobj.form.isValid() == false) return;
+            var o = Roleobj.form.getData();  //获取表单数据
+            $.ajax({
+                url: "/PowerManage/RoleWorkbench/AddOrUpdate",
+                type: 'post',
+                data: { data: o },
+                cache: false,
+                success: function (text) {
+                    Roleobj.CloseWindow("save");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.alert(jqXHR.responseText);
+                    Roleobj.CloseWindow();
+                }
+            });
+        },
+        //取消事件
+        btnCancel: function () {
+            Roleobj.CloseWindow("cancel");
+        },
+        //窗口关闭
+        CloseWindow: function (action) {
+            /*if ((action == "cancel" || action == "close") && Roleobj.form.isChanged()) {
+                mini.confirm("数据被修改了，是否先保存？", "提示",
+                    function (action) {
+                        if (action != "ok") {
+                            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                            else window.close();
+                        }
+                    });
+            }
+            else {
+                if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                else window.close();
+            }*/
+
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+      
+    };
+</script>
+

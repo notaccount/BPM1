@@ -1,0 +1,192 @@
+﻿
+@{
+    ViewData["Title"] = "AddOrUpdate";
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+<style>
+    .bottom-btn{
+        border-left:none;
+        border-right:none;
+        border-bottom:none;
+    }
+</style>
+<div id="form1" class="mini-fit form-include-remark">
+    <input type="hidden" name="ID" class="mini-hidden" />
+    <table  class="table-sty">
+        <tr>
+            <td class="editLeftWidth label-item">岗位编码：</td>
+            <td class="editRightWidth"><input name="Code" class="mini-textbox" required="true"   /></td>
+            <td class="editLeftWidth label-item">岗位名称：</td>
+            <td class="editRightWidth"><input name="Name" class="mini-textbox" required="true"  /></td>
+        </tr>
+        <tr>
+            <td class="editLeftWidth  label-item">备注：</td>
+            <td colspan="3">
+                <textarea name="Remarks" class="mini-textarea" vtype="maxLength:500;" onvalidation="Stationsobj.IsValidateRemark"  ></textarea>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-toolbar bottom-btn">
+    <a  class="mini-button minibutton-save button-pre-bn"  onclick="Stationsobj.btnSave()" >保存</a>
+    <a  class="mini-button minibutton-save button-pre-bn"  onclick="Stationsobj.btnCancel()" >取消</a>
+</div>
+<script type="text/javascript">
+    //miniui初始化
+    mini.parse();
+    //反查、保存、取消、关闭
+    var Stationsobj = {
+        form: new mini.Form("form1"),
+        remarks: mini.get("Remarks"),
+        //操作类型
+        actionType: "",
+        //反查
+        setData: function (data) {
+            Stationsobj.actionType = data.action;
+            if (data.action == "edit") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
+                $.ajax({
+                    url: "/PowerManage/Station/GetEntity?&id=" + data.id,
+                    cache: false,
+                    success: function (text) {
+                        var o = mini.decode(text);
+                        Stationsobj.form.setData(o);
+                        Stationsobj.form.setChanged(false);
+                    }
+                });
+            }
+        },
+        //保存事件
+        btnSave: function (e) {
+            var o = Stationsobj.form.getData();
+            Stationsobj.form.validate();
+
+            if (Stationsobj.form.isValid() == false) return;
+
+            if (Stationsobj.actionType == "edit") {
+                //***编辑时验证****//
+                $.ajax({
+                    url: "/PowerManage/Station/FindOnlyEdit",
+                    type: 'post',
+                    data: { stationCode: o.Code, ID: o.ID },
+                    cache: false,
+                    success: function (text) {
+                        if (text) {
+                            //验证通过，再执行插入数据
+                            $.ajax({
+                                url: "/PowerManage/Station/AddOrUpdate",
+                                type: 'post',
+                                data: { model: o },
+                                cache: false,
+                                success: function (text) {
+                                    Stationsobj.CloseWindow("save");
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    alert(jqXHR.responseText);
+                                    Stationsobj.CloseWindow();
+                                }
+                            });
+                        }
+                        else {
+                            mini.alert("您输入的编码已存在。");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(jqXHR.responseText);
+                        menuAddObj.CloseWindow();
+                    }
+                });
+            } else {
+                //****新增时验证****//
+                //先进行验证，判断编码是否存在
+                $.ajax({
+                    url: "/PowerManage/Station/FindOnly",
+                    type: 'post',
+                    data: { stationCode: o.Code },
+                    cache: false,
+                    success: function (text) {
+                        if (text) {
+                            //验证通过，再执行插入数据
+                            $.ajax({
+                                url: "/PowerManage/Station/AddOrUpdate",
+                                type: 'post',
+                                data: { model: o },
+                                cache: false,
+                                success: function (text) {
+                                    Stationsobj.CloseWindow("save");
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    alert(jqXHR.responseText);
+                                    Stationsobj.CloseWindow();
+                                }
+                            });
+                        }
+                        else {
+                            mini.alert("您输入的编码已存在。");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(jqXHR.responseText);
+                        menuAddObj.CloseWindow();
+                    }
+                });
+            }
+        },
+        //窗口关闭事件
+        CloseWindow: function (action) {
+            /*if ((action == "cancel" || action == "close") && Stationsobj.form.isChanged()) {
+                mini.confirm("数据被修改了，是否先保存？", "提示",
+                    function (action) {
+                        if (action != "ok") {
+                            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                            else window.close();
+                        }
+                    });
+            }
+            else {
+                if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                else window.close();
+            }*/
+
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        },
+        //窗口关闭
+        CloseWin: function (action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        },
+        //取消事件
+        btnCancel: function (e) {
+            Stationsobj.CloseWindow("cancel");
+        },
+        //验证账户唯一
+        validataCodeOnly: function () {
+            var code = mini.get("Code").getValue();
+            $.ajax({
+                url: "/PowerManage/Station/FindOnly",
+                type: 'post',
+                data: { stationCode: code },
+                cache: false,
+                success: function (text) {
+                    if (!text) { mini.alert("您输入的编码已存在。"); return; }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseText);
+                    menuAddObj.CloseWindow();
+                }
+            });
+        },
+        //检查备注输入的是否超长
+        IsValidateRemark: function (e) {
+            if (e.isValid) {
+                //if (mini.get("Remarks").getList().length > 500) {
+                //    e.errorText = "最多只能输入500个字符。";
+                //    e.isValid = false;
+                //}
+            }
+        }
+    };
+</script>
+

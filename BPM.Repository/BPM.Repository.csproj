@@ -12,4 +12,8 @@
     <ProjectReference Include="..\BPM.Models\BPM.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="WorkFlow\" />
+  </ItemGroup>
+
 </Project>

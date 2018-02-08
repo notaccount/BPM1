@@ -1,0 +1,181 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    //选择人员
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+<style>
+    .mini-grid-headerCell:last-child, .mini-grid-cell:last-child {
+        border-right: none;
+    }
+</style>
+<div class="listcont">
+    <div class="listcontainer" style="position:absolute;top:8px;left: 2px;right: 2px;bottom: 8px;">
+        <div class="mini-splitter" style="width:100%;height:100%;">
+            <div size="240">
+                @*<div class="mini-toolbar" style="padding:2px;border-top:0;border-left:0;border-right:0;">
+                        <span style="padding-left:5px;">名称：</span>
+                        <input class="mini-textbox" style="width:100px;" />
+                        <a class="mini-button" iconCls="icon-search" plain="true">查找</a>
+                    </div>*@
+
+
+                <div class="mini-fit">
+                    <ul id="tree1" class="mini-tree" url="/PowerManage/UsersOrganization/GetJson" style="width:100%;"
+                        showTreeIcon="true" textField="Name" idField="ID" parentField="ParentID" resultAsTree="false" expandOnLoad="true"></ul>
+                </div>
+            </div>
+            <div>
+                <div class="mini-toolbar" style="padding:2px;border-top:0;border-left:0;border-right:0;">
+
+                    <a class="mini-button" iconCls="icon-add" plain="true" onclick="userSelectObj.btnSave()">确定</a>
+                </div>
+                <div class="mini-fit">
+                    <div id="grid1" class="mini-datagrid"  allowMoveColumn="false" url="/PowerManage/Users/GetUserListJsonByOrgId" style="width:100%;height:100%;" borderStyle="border:0;" multiSelect="true">
+                        <input class="mini-hidden" name="ID" />
+                        <div property="columns">
+                            <div type="checkcolumn"></div>
+
+                            <div field="UID" width="120" headerAlign="center" allowSort="false">账户</div>
+                            <div field="Cn" width="120" headerAlign="center" allowSort="false">姓名</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //miniui初始化
+    mini.parse();
+
+    //变量
+    var orgUserObj = {
+        roleId: "",
+        areaCode: ""
+    }
+
+    //方法集合对象
+    var userSelectObj = {
+        //反查
+        setData: function (data) {
+            if (data.action == "selectUser") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
+                orgUserObj.roleId = data.id;
+                orgUserObj.areaCode = data.AreaCode;
+                userSelectObj.GetCheckedUsersByRoleId(orgUserObj.roleId);
+            }
+        },
+        //绑定
+        GetCheckedUsersByRoleId: function (roleId) {
+            $.ajax({
+                url: "/PowerManage/Users/GetCheckUserIdByRoleId?roleId=" + roleId,
+                cache: false,
+                async: false,
+                success: function (result) {
+                    var data = mini.decode(result);
+                    for (var i = 0; i < data.length; i++) {
+                        list.push(data[i].ID);
+                    }
+
+                    spObj.grid.load({ roleId: roleId });
+                }
+            });
+        },
+        GetCheckedUsersByOrgId: function (orgid) {
+            $.ajax({
+                url: "/PowerManage/Users/GetCheckUserIdByOrgId?orgId=" + orgid,
+                cache: false,
+                async: false,
+                success: function (result) {
+                    var data = mini.decode(result);
+                    for (var i = 0; i < data.length; i++) {
+                        list.push(data[i].ID);
+                    }
+                    spObj.grid.load({ orgId: orgid });
+                }
+            });
+        },
+        //保存数据
+        btnSave: function () {
+            var userlist = spObj.getCheckedIds();
+
+            //插入数据库
+            $.ajax({
+                url: "/PowerManage/Role/ChoosePerson",
+                cache: false,
+                type: 'post',
+                data: { roleid: orgUserObj.roleId, areaCode: orgUserObj.areaCode, persons: userlist },
+                success: function (text) {
+                    mini.alert("配置成功", "提示", function () { $('.mini-button').removeClass('icon-style')});
+                    window.close();
+                }
+            });
+        },
+    };
+
+
+
+    var list = [];
+
+    var spObj = {
+        tree: mini.get("tree1"),
+        grid: mini.get("grid1"),
+        getCheckedIds: function () {
+            return list.join(',');
+        }
+    };
+
+    spObj.tree.on("nodeselect", function (e) {
+        spObj.grid.load({ orgId: e.node.ID });
+        //userSelectObj.GetCheckedUsersByOrgId(e.node.ID );
+    });
+
+    spObj.grid.on("select", function (e) {
+        //alert("1");
+        if (list.indexOf(e.record.ID) < 0) {
+            list.push(e.record.ID);
+        }
+    });
+    spObj.grid.on("deselect", function (e) {
+        list.removevalue(e.record.ID);
+    });
+
+    spObj.grid.on("load", function (e) {
+        var data = e.data;
+        for (var i = 0; i < data.length; i++) {
+            if (list.indexOf(data[i].ID) >= 0) {
+                var row = spObj.grid.getRow(i);
+                spObj.grid.select(row);
+            }
+
+        }
+    });
+
+    Array.prototype.indexOf = function (val) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i] == val) {
+                return i;
+            }
+        }
+        return -1;
+    };
+
+    Array.prototype.removevalue = function (val) {
+        var index = this.indexOf(val);
+        if (index > -1) {
+            this.splice(index, 1);
+        }
+    };
+    //页面加载时执行事件
+    //页面初始化方法
+    //$(function () {
+    //    //展开第一级节点
+    //    // treeObj.tree.expandLevel(0);
+    //    spObj.tree.selectNode(spObj.tree.getList()[1]);
+    //    mini_list_Tree.expandFirstNode(spObj.tree);
+    //});
+</script>
+
+

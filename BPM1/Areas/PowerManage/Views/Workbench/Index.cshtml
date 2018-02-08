@@ -1,0 +1,311 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+<style>
+    .mini-panel-border{
+        border:none;
+    }
+    .mini-grid-headerCell:last-child, .mini-grid-cell:last-child {
+        border-right: none;
+    }
+    .mini-toolbar {
+        padding:10px 0!important;
+    }
+</style>
+<div class="listcont">
+    <div class="listcontainer" style="position:absolute;top: 12px;left: 12px;right: 12px;bottom: 12px;">
+
+        <div class="mini-splitter" style="width:100%;height:100%;">
+            <div size="560" showCollapseButton="false">
+                <div class="mini-toolbar" style="padding:2px;border-top:0;border-left:0;border-right:0;">
+                    <a style="cursor:default;padding:2px;padding-left:10px;float:left;">工作台分类：</a>
+                    <a class="mini-button green" iconCls="icon-add" plain="true" onclick="WorkbenchObj.btnAdd">新增</a>
+                    <a class="mini-button Pink" iconCls="icon-add" plain="true" onclick="WorkbenchObj.btnEdit">编辑</a>
+                    <a class="mini-button gules" iconCls="icon-add" plain="true" onclick="WorkbenchObj.btnDel">删除</a>
+                    @*<a class="mini-button Light" iconCls="icon-add" plain="true" onclick="WorkbenchObj.btnLook">预览</a>*@
+                </div>
+                <div class="mini-fit">
+                    <div id="grid" class="mini-datagrid"  allowMoveColumn="false" style="width:100%;height:100%;"
+                         url="/PowerManage/Workbench/GetWorkbenchJson" idField="ID" allowResize="false" pageSize="20" multiSelect="false" onselectionchanged="WorkbenchObj.selectRow" selectOnLoad="true" allowAlternating="true">
+                        <div property="columns">
+                            <div headerAlign="center" type="indexcolumn">序号</div>
+                            <div field="Name" width="70" headerAlign="center" Align="left" allowSort="false">名称</div>
+                            <div field="U_IsSystem" width="70" renderer="WorkbenchObj.onRenderer" headerAlign="center" Align="left" allowSort="false">是否系统内置</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div showCollapseButton="false">
+                <div class="mini-toolbar" style="padding:2px;border-top:0;border-left:0;border-right:0;">
+                    <a style="cursor:default;padding:2px;padding-left:10px;float:left;">工作台内容：</a>
+                    <a class="mini-button green" iconCls="icon-add" plain="true" onclick="WorkbenchMenuObj.btnAdd">新增</a>
+                    @*<a class="mini-button" iconCls="icon-edit" plain="true" onclick="WorkbenchMenuObj.btnEdit">编辑</a>*@
+                    <a class="mini-button gules" iconCls="icon-remove" plain="true" onclick="WorkbenchMenuObj.btnDel">删除</a>
+                    <a class="mini-button Blue" iconCls="icon-remove" plain="true" onclick="WorkbenchMenuObj.btnSort">排序</a>
+                </div>
+                <div class="mini-fit">
+                    <div id="gridMenu" class="mini-datagrid"  allowMoveColumn="false" style="width:100%;height:100%;" sortField="U_SortNo"
+                         url="/PowerManage/Workbench/GetWorkbenchMenusJson" idField="ID" allowResize="false" pageSize="20" multiSelect="false" allowAlternating="true">
+                        <div property="columns">
+                            <div headerAlign="center" type="indexcolumn">序号</div>
+                            <div field="Name" width="70" headerAlign="center" Align="left" allowSort="false">菜单名称</div>
+                            @*<div field="StyleID" width="70" headerAlign="center" Align="left" allowSort="false">样式</div>*@
+                            <div field="U_IsValid" width="70" headerAlign="center" renderer="WorkbenchMenuObj.onRenderer" Align="left" allowSort="false">是否有效</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    mini.parse();
+    var areaCode = @Html.Raw(ViewData["U_AreaCode"]);
+    var WorkbenchObj = {
+        //展示数据控件
+        grid: mini.get("grid"),
+        ID: null,
+        //选中行事件
+        selectRow: function (e) {
+                    var vgrid = e.sender;
+                    var record = vgrid.getSelected();
+            var Parameter = [];
+            Parameter.push({
+                paramName: 'U_AreaCode',
+                 paramValue: '@Hasng.CadreFile.Utilities.ManageProvider.Current.U_AreaCode',
+                Operation: 'Equal',
+                Logic: "AND"
+            });
+            Parameter.push({
+                paramName: 'WorkbenchID',
+                paramValue: record.ID,
+                Operation: 'Equal',
+                Logic: "AND"
+            });
+            WorkbenchObj.ID = record.ID;
+            WorkbenchMenuObj.grid.load({ ParameterJson: mini.encode(Parameter) });
+        },
+        //查看
+        btnLook: function (){
+            hasng.WinOpen({
+                url: "/Home/Main",
+                title: "预览", width: 1200, height: 800,
+                onload: function (iframe) {
+
+                    var data = { action: "Look" };
+                    iframe.contentWindow.obj.SetData(data);
+                },
+                ondestroy: function (action) {
+                    WorkbenchObj.grid.reload();
+                }
+            });
+        },
+        //新增
+        btnAdd: function () {
+            hasng.WinOpen({
+                url: "/PowerManage/Workbench/AddOrEdit",
+                title: "新增", width: 500, height: 300,
+                onload: function (iframe) {
+
+                    var data = { action: "new" };
+                    iframe.contentWindow.WorkbenchObj.SetData(data);
+                },
+                ondestroy: function (action) {
+                    WorkbenchObj.grid.reload();
+                }
+            });
+        },
+        //编辑
+        btnEdit: function () {
+            var row = WorkbenchObj.grid.getSelected();
+            if (!!row) {
+                if (row.U_IsSystem == "True") {
+                    mini.alert("系统内置账户，不允许编辑！");
+                } else { 
+                    hasng.WinOpen({
+                        url: "/PowerManage/Workbench/AddOrEdit",
+                        title: "编辑", width: 500, height: 300,
+                        onload: function (iframe) {
+
+                            var data = { action: "edit", id: row.ID };
+                            iframe.contentWindow.WorkbenchObj.SetData(data);
+                        },
+                        ondestroy: function (action) {
+                            WorkbenchObj.grid.reload();
+
+                        }
+                    });
+                }
+             
+            } else {
+                 hasng.Alert();
+            }
+        },
+        //删除
+        btnDel: function () {
+            var rows = WorkbenchObj.grid.getSelected();
+            if (!!rows) {
+                if (rows.U_IsSystem == "True") {
+                    mini.alert("系统内置账户，不允许编辑！");
+                }
+                else { 
+                    hasng.DelConfirm(function () {
+                        var id = rows.ID;
+                        WorkbenchObj.grid.loading("操作中，请稍后......");
+                        $.ajax({
+                            url: "/PowerManage/Workbench/Del?id=" + id,
+                            success: function (text) {
+                                WorkbenchObj.grid.reload();
+                            },
+                            error: function () {
+                            }
+                        });
+                    });
+                }
+            
+            } else {
+                 hasng.Alert();
+            }
+        },
+        onRenderer: function (e) {
+           var o = e.value;
+           if (typeof(o) == "undefined")
+           {
+               return null;
+           }
+           if (o == "True") {
+               return "是";
+           }
+           if (o == "False"){
+               return "否";
+           }
+        }
+    };
+
+    var WorkbenchMenuObj = {
+        //展示数据控件
+        grid: mini.get("gridMenu"),
+        //新增
+        btnAdd: function () {
+            var row = WorkbenchObj.grid.getSelected();
+            if (!!row) {
+                hasng.WinOpen({
+                    url: "/PowerManage/Workbench/AddOrEditMenu",
+                    title: "新增", width: 500, height: 480,
+                    onload: function (iframe) {
+
+                        var data = { action: "new", WorkbenchID: WorkbenchObj.ID };
+                        iframe.contentWindow.WorkbenchMenuObj.SetData(data);
+                    },
+                    ondestroy: function (action) {
+                        WorkbenchMenuObj.grid.load({
+                            ParameterJson: JSON.stringify([{
+                                paramName: 'WorkbenchID',
+                                paramValue: WorkbenchObj.ID,
+                                Operation: 'Equal',
+                                Logic: "AND"
+                            }
+                            ])
+                        });
+                    }
+                });
+            }
+            else {
+                mini.alert("请选择左侧的数据行！", "", function () { $('.mini-button').removeClass('icon-style'); });
+            }
+        },
+        //编辑
+        btnEdit: function () {
+            var row = WorkbenchMenuObj.grid.getSelected();
+            if (!!row) {
+                hasng.WinOpen({
+                    url: "/PowerManage/Workbench/AddOrEditMenu",
+                    title: "编辑", width: 500, height: 300,
+                    onload: function (iframe) {
+
+                        var data = { action: "edit", id: row.ID };
+                        iframe.contentWindow.WorkbenchMenuObj.SetData(data);
+                    },
+                    ondestroy: function (action) {
+                        WorkbenchMenuObj.grid.reload();
+                    }
+                });
+            } else {
+                 hasng.Alert();
+            }
+        },
+        //删除
+        btnDel: function () {
+            var rows = WorkbenchMenuObj.grid.getSelected();
+            if (!!rows) {
+                hasng.DelConfirm(function () {
+                            var id = rows.ID;
+                            WorkbenchMenuObj.grid.loading("操作中，请稍后......");
+                            $.ajax({
+                                url: "/PowerManage/Workbench/DelMenu?id=" + id,
+                                success: function (text) {
+                                    WorkbenchMenuObj.grid.reload();
+                                },
+                                error: function () {
+                                }
+                            });
+                    });
+            } else {
+                 hasng.Alert();
+            }
+        },
+        //排序
+        btnSort: function () {
+            var row = WorkbenchObj.grid.getSelected();
+            var pid = "";
+            if (!!row)
+                pid = row.ID;
+
+            var Parameter = [];
+            Parameter.push({
+                paramName: 'ID21',
+                paramValue: row.ID,
+                Operation: 'Equal',
+                Logic: "AND"
+            });
+            var obj = {
+                tablename: "Power_WorkbenchMenus",  //被排序的表名称
+                ParameterJson: mini.encode(Parameter)
+            };
+            //传入参数，回掉函数
+            orderObj.showWin(obj, function () {
+                //重新加载数据
+                WorkbenchMenuObj.grid.reload();
+            })
+        },
+        onRenderer: function (e) {
+            var o = e.value;
+            if (typeof (o) == "undefined") {
+                return null;
+            }
+            if (o == "True") {
+                return "有效";
+            }
+            if (o == "False") {
+                return "无效";
+            }
+        }
+
+    };
+
+    //页面加载时执行事件
+    //页面初始化方法
+    $(function () {
+        //表格数据加载
+        WorkbenchObj.grid.load();
+
+    });
+
+</script>
+

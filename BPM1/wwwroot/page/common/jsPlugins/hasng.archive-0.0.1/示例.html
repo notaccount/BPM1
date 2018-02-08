@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+	<meta charset="UTF-8">
+	<title>示例</title>
+	<link rel="stylesheet" href="http://at.alicdn.com/t/font_6uox36k8giepnwmi.css">
+	<link rel="stylesheet" type="text/css" href="js/malihu-custom-scrollbar-plugin-3.0.7/jquery.mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/hasng.archive-0.0.1.css">
+	<script type="text/javascript" src="js/jquery-1.8.2.js"></script>
+	<script type="text/javascript" src="js/hasng.archive-0.0.1.js"></script>
+	<style>
+		.demo{padding:20px;}
+		
+	</style>
+</head>
+<body>
+	<div class="demo">
+			<h3 class="hx-page-header">panel(面板) <small>相关示例</small></h3>
+			<div class="demo-content bg">
+				<div class="hx-panel">
+					<div class="hx-panel-header">
+						<span class="hx-panel-header-icon">
+							<i class="icon iconfont">&#xe67f;</i>
+						</span>
+						<span class="hx-panel-header-title"> panel标题文本</span>
+						<div class="hx-panel-header-toolbar">
+							<div class="hx-link-group">
+								<a class="hx-link-item active" href="javascript:void(0)">
+									<i class="icon iconfont">&#xe64a;</i>
+								</a>
+								<a class="hx-link-item" href="javascript:void(0)">
+									<i class="icon iconfont">&#xe61e;</i>
+								</a>
+								<a class="hx-link-item"  href="javascript:void(0)">
+									<i class="icon iconfont">&#xe64e;</i>
+								</a>
+								<a class="hx-link-item" href="javascript:void(0)">
+									<i class="icon iconfont">&#xe62c;</i>
+								</a>
+								<a class="hx-link-item" href="javascript:void(0)">
+									<i class="icon iconfont">&#xe606;</i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="hx-panel-body">
+
+						panel 主体容器
+					</div>
+					<div class="hx-panel-footer">
+						panel 底部容器
+					</div>
+				</div>
+			</div>
+	</div>
+
+	<div class="demo">
+		<h3 class="hx-page-header">link-group(链接组) <small>相关示例</small></h3>
+		<div class="demo-content">
+			<div class="hx-link-group clearfloat">
+				<a class="hx-link-item active" href="javascript:void(0)">
+					<i class="icon iconfont">&#xe64a;</i>
+				</a>
+				<a class="hx-link-item" href="javascript:void(0)">
+					<i class="icon iconfont">&#xe61e;</i>
+				</a>
+				<a class="hx-link-item"  href="javascript:void(0)">
+					<i class="icon iconfont">&#xe64e;</i>
+				</a>
+				<a class="hx-link-item" href="javascript:void(0)">
+					<i class="icon iconfont">&#xe62c;</i>
+				</a>
+				<a class="hx-link-item" href="javascript:void(0)">
+					<i class="icon iconfont">&#xe606;</i>
+				</a>
+			</div>
+			<br />
+			<div class="hx-link-group clearfloat">
+				<a class="hx-link-item active" href="javascript:void(0)">链接1</a>
+				<a class="hx-link-item" href="javascript:void(0)">链接2</a>
+				<a class="hx-link-item" href="javascript:void(0)">链接3</a>
+				<a class="hx-link-item" href="javascript:void(0)">链接4</a>
+				<a class="hx-link-item" href="javascript:void(0)">其他链接</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="demo">
+		<h3 class="hx-page-header">tab(选项卡切换) <small>相关示例</small></h3>
+		<div class="demo-content">
+			<div class="hx-tab">
+				<div class="hx-tab-nav clearfloat">
+					<a href="javascript:void(0)" class="hx-tab-nav-item active">性别</a>
+					<a href="javascript:void(0)" class="hx-tab-nav-item">民族</a>
+					<a href="javascript:void(0)" class="hx-tab-nav-item">党派</a>
+					<a href="javascript:void(0)" class="hx-tab-nav-item">年龄</a>
+				</div>
+				<div class="hx-tab-content">
+					<div class="hx-tab-content-item active">性别 content</div>
+					<div class="hx-tab-content-item">民族 content</div>
+					<div class="hx-tab-content-item">党派 content</div>
+					<div class="hx-tab-content-item">年龄 content</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="demo">
+		<h3 class="hx-page-header">tag(标签组) <small>相关示例</small></h3>
+		<div class="demo-content">
+			<div class="hx-tag-group">
+				<span class="hx-tag-item active">缺职</span>
+				<span class="hx-tag-item">一年内改任</span>
+				<span class="hx-tag-item">一年内应退休</span>
+				<span class="hx-tag-item">缺女干部</span>
+				<span class="hx-tag-item">缺少数民族干部</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="demo">
+		<h3 class="hx-page-header">record-list(记录列表) <small>相关示例</small></h3>
+		<div class="demo-content">
+			<ul class="hx-record-list">
+				<li class="hx-record-list-item">
+					<i class="icon iconfont color-75bef9">&#xe658;</i> 
+					<a class="hx-record-list-item-title" href="javascript:void(0)">全省省管干部名册</a>
+				</li>
+				<li class="hx-record-list-item">
+					<i class="icon iconfont color-fe6a5c">&#xe658;</i> 
+					<a class="hx-record-list-item-title" href="javascript:void(0)">全省省管干部名册</a>
+				</li>
+				<li class="hx-record-list-item">
+					<i class="icon iconfont color-f6bf3b">&#xe658;</i> 
+					<a class="hx-record-list-item-title" href="javascript:void(0)">全省省管干部名册</a>
+				</li>
+				<li class="hx-record-list-item">
+					<i class="icon iconfont color-abd6f9">&#xe658;</i> 
+					<a class="hx-record-list-item-title" href="javascript:void(0)">全省省管干部名册</a>
+				</li>
+				<li class="hx-record-list-item">
+					<i class="icon iconfont color-c4d7e8">&#xe658;</i> 
+					<a class="hx-record-list-item-title" href="javascript:void(0)">全省省管干部名册</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="demo">
+		<h2 class="hx-page-header">table(数据表格) <small></small></h2>
+		<div class="table">
+			<div class="tabel-content" style="width:2000px;">
+				<table class="table-header">
+					<colgroup>
+		              <col style="width: 50px;" />
+		              <col style="width:100px;"/>
+		              <col style="width:150px;"/>
+		              <col style="width:100px;"/>
+		              <col style="width:100px;"/>
+		              <col style="width:100px;"/>
+		              <col style="width:100px;"/>
+		              <col style="width:100px;"/>
+		              <col style="width:100px;"/>
+		          </colgroup>
+					<thead>
+						<tr>
+							<th class="first"><input type="checkbox" name="" id=""> 序号</th>
+							<th>姓名</th>
+							<th>收件时间</th>
+							<th>接收人</th>
+							<th>来件部门</th>
+							<th>正本数</th>
+							<th>副本数</th>
+							<th>案卷质量</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+				</table>
+				<div class="table-body" style="height:400px;">
+					<table>
+						<colgroup>
+			              	<col style="width: 50px;" />
+			              	<col style="width:100px;"/>
+			             	<col style="width:150px;"/>
+			              	<col style="width:100px;"/>
+			              	<col style="width:100px;"/>
+			              	<col style="width:100px;"/>
+			              	<col style="width:100px;"/>
+			              	<col style="width:100px;"/>
+			              	<col style="width:100px;"/>
+			          	</colgroup>
+						<tbody>
+							<tr>
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+							<tr class="even last">
+								<td><input type="checkbox" name="" id=""> <label for="">11</label></td>
+								<td>张三</td>
+								<td>2016-09-28 16:50:17</td>
+								<td>李四</td>
+								<td>技术研发部</td>
+								<td>20</td>
+								<td>12</td>
+								<td>案卷质量</td>
+								<td>备注</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="demo">
+		<h2 class="hx-page-header">page(分页) <small></small></h2>
+		<ul class="pager">
+			<li class="page-select">
+				<div class="select" data-value="10">
+					<span class="select-text">10条/页</span>
+					<span class="icon iconfont select-icon">&#xe603;</span>
+					<ul class="select-options">
+						<li data-value="10">10条/页</li>
+						<li data-value="20">20条/页</li>
+						<li data-value="30">30条/页</li>
+						<li data-value="40">40条/页</li>
+					</ul>
+				</div>
+			</li>
+			<li class="page-first"><a href="javascript:void(0)">首页</a></li>
+			<li class="page-pre"><a href="javascript:void(0)">上一页</a></li>
+			<li class="page"><a href="javascript:void(0)">1</a></li>
+			<li class="page"><a href="javascript:void(0)">2</a></li>
+			<li class="page"><a class="active" href="javascript:void(0)">3</a></li>
+			<li class="page"><a href="javascript:void(0)">4</a></li>
+			<li class="page"><a href="javascript:void(0)">5</a></li>
+			<li class="page"><a href="javascript:void(0)">6</a></li>
+			<li class="page"><a href="javascript:void(0)">7</a></li>
+			<li class="page-next"><a href="javascript:void(0)">下一页</a></li>
+			<li class="page-last"><a href="javascript:void(0)">末页</a></li>
+			<li class="page-redirect">
+				<label>跳转到：</label>
+				<input type="text" value=""/>
+				<input type="button" value="跳转" />
+			</li>
+		</ul>
+	</div>
+
+	<div class="demo">
+		<h2 class="hx-page-header">form(表单元素) <small>非自适应</small></h2>
+		<form class="">
+			<label class="size-s">小号尺寸表单元素：</label>
+			<input class="size-s" type="button" value="按钮" />
+			<input class="size-s" type="text" value="文本框" />
+			<div class="select size-s" data-text="" data-value="">
+				<span class="icon iconfont select-icon">&#xe603;</span>
+				<span class="select-text">下拉框选择</span>
+				<ul class="select-options">
+					<li data-value="10">下拉项</li>
+					<li data-value="20">下拉项</li>
+					<li data-value="30">下拉项</li>
+					<li data-value="40">下拉项</li>
+				</ul>
+			</div> 
+
+			<div class="text-extend size-s dic clearfloat">
+				<span class="icon iconfont">&#xe659;</span>
+				<input type="text" placeholder="字典">
+			</div>
+
+			<div class="text-extend size-s date clearfloat">
+				<span class="icon iconfont">&#xe657;</span>
+				<input type="text" placeholder="日期"/>
+			</div>
+
+			<label class="">正常尺寸表单元素：</label>
+			<input type="button" value="按钮" />
+			<input class="theme-gray" type="button" value="灰色皮肤按钮" />
+			<input type="text" value="文本框" />
+			<div class="select" data-text="" data-value="">
+				<span class="icon iconfont select-icon">&#xe603;</span>
+				<span class="select-text">下拉框选择</span>
+				<ul class="select-options">
+					<li data-value="10">下拉项</li>
+					<li data-value="20">下拉项</li>
+					<li data-value="30">下拉项</li>
+					<li data-value="40">下拉项</li>
+				</ul>
+			</div>
+			<div class="text-extend dic clearfloat">
+				<span class="icon iconfont">&#xe659;</span>
+				<input type="text" placeholder="字典">
+			</div>
+
+			<div class="text-extend date clearfloat">
+				<span class="icon iconfont">&#xe657;</span>
+				<input type="text" placeholder="日期"/>
+			</div>
+			<label class="size-l">大号尺寸表单元素：</label>
+			<input class="size-l" type="button" value="按钮" />
+			<input class="size-l" type="text" value="文本框" />
+			<div class="select size-l" data-text="" data-value="">
+				<span class="icon iconfont select-icon">&#xe603;</span>
+				<span class="select-text">下拉框选择</span>
+				<ul class="select-options">
+					<li data-value="10">下拉项</li>
+					<li data-value="20">下拉项</li>
+					<li data-value="30">下拉项</li>
+					<li data-value="40">下拉项</li>
+				</ul>
+			</div>
+			<div class="text-extend size-l dic clearfloat">
+				<span class="icon iconfont">&#xe659;</span>
+				<input type="text" placeholder="字典">
+			</div>
+
+			<div class="text-extend size-l date clearfloat">
+				<span class="icon iconfont">&#xe657;</span>
+				<input type="text" placeholder="日期"/>
+			</div>
+		</form>
+		<h2 class="hx-page-header">表单元素 <small>自适应</small></h2>
+		<form>
+			<label class="size-s width-auto">小号尺寸表单元素：</label>
+			<input class="size-s width-auto" type="button" value="按钮" />
+			<input class="size-s width-auto" type="text" value="文本框" />
+			<div class="select size-s width-auto" data-text="" data-value="">
+				<span class="icon iconfont select-icon">&#xe603;</span>
+				<span class="select-text">下拉框选择</span>
+				<ul class="select-options">
+					<li data-value="10">下拉项</li>
+					<li data-value="20">下拉项</li>
+					<li data-value="30">下拉项</li>
+					<li data-value="40">下拉项</li>
+				</ul>
+			</div>
+			<label class="">正常尺寸表单元素：</label>
+			<input class="width-auto" type="button" value="按钮" />
+			<input class="width-auto" type="text" value="文本框" />
+			<div class="select width-auto" data-text="" data-value="">
+				<span class="icon iconfont select-icon">&#xe603;</span>
+				<span class="select-text">下拉框选择</span>
+				<ul class="select-options">
+					<li data-value="10">下拉项</li>
+					<li data-value="20">下拉项</li>
+					<li data-value="30">下拉项</li>
+					<li data-value="40">下拉项</li>
+				</ul>
+			</div>
+			<label class="size-l">大号尺寸表单元素：</label>
+			<input class="size-l width-auto" type="button" value="按钮" />
+			<input class="size-l width-auto" type="text" value="文本框" />
+			<div class="select size-l width-auto" data-text="" data-value="">
+				<span class="icon iconfont select-icon">&#xe603;</span>
+				<span class="select-text">下拉框选择</span>
+				<ul class="select-options">
+					<li data-value="10">下拉项</li>
+					<li data-value="20">下拉项</li>
+					<li data-value="30">下拉项</li>
+					<li data-value="40">下拉项</li>
+				</ul>
+			</div>
+
+
+			<div class="text-extend date size-s width-auto clearfloat">
+				<span class="icon iconfont">&#xe657;</span>
+				<input type="text" placeholder="日期"/>
+			</div>
+			<div class="text-extend date width-auto clearfloat">
+				<span class="icon iconfont">&#xe657;</span>
+				<input type="text" placeholder="日期"/>
+			</div>
+			<div class="text-extend date size-l width-auto clearfloat">
+				<span class="icon iconfont">&#xe657;</span>
+				<input type="text" placeholder="日期"/>
+			</div>
+
+			<div class="text-extend dic size-s width-auto clearfloat">
+				<span class="icon iconfont">&#xe659;</span>
+				<input type="text" placeholder="字典"/>
+			</div>
+			<div class="text-extend dic width-auto clearfloat">
+				<span class="icon iconfont">&#xe659;</span>
+				<input type="text" placeholder="字典"/>
+			</div>
+			<div class="text-extend dic size-l width-auto clearfloat">
+				<span class="icon iconfont">&#xe659;</span>
+				<input type="text" placeholder="字典"/>
+			</div>
+		</form>
+
+		<h2 class="hx-page-header">表单元素组合 <small>非自适应</small></h2>
+		<div class="form-group label-text size-s">
+			<label>输入框小号</label>
+			<div class="right-wrap">
+				<input type="text" />
+			</div>
+		</div>
+		<div class="form-group label-select size-s">
+			<label>下拉框小号</label>
+			<div class="right-wrap">
+				<div class="select" data-text="" data-value="">
+					<span class="icon iconfont select-icon">&#xe603;</span>
+					<span class="select-text">下拉框选择</span>
+					<ul class="select-options">
+						<li data-value="10">下拉项</li>
+						<li data-value="20">下拉项</li>
+						<li data-value="30">下拉项</li>
+						<li data-value="40">下拉项</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="form-group label-text">
+			<label>输入框正常</label>
+			<div class="right-wrap">
+				<input type="text" />
+			</div>
+		</div>
+		<div class="form-group label-select">
+			<label>下拉框正常</label>
+			<div class="right-wrap">
+				<div class="select" data-text="" data-value="">
+					<span class="icon iconfont select-icon">&#xe603;</span>
+					<span class="select-text">下拉框选择</span>
+					<ul class="select-options">
+						<li data-value="10">下拉项</li>
+						<li data-value="20">下拉项</li>
+						<li data-value="30">下拉项</li>
+						<li data-value="40">下拉项</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="form-group label-text size-l">
+			<label>输入框大号</label>
+			<div class="right-wrap">
+				<input type="text" />
+			</div>
+		</div>
+		<div class="form-group label-select size-l">
+			<label>下拉框大号</label>
+			<div class="right-wrap">
+				<div class="select" data-text="" data-value="">
+					<span class="icon iconfont select-icon">&#xe603;</span>
+					<span class="select-text">下拉框选择</span>
+					<ul class="select-options">
+						<li data-value="10">下拉项</li>
+						<li data-value="20">下拉项</li>
+						<li data-value="30">下拉项</li>
+						<li data-value="40">下拉项</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<h2 class="hx-page-header">表单元素组合 <small>自适应</small></h2>
+		<div class="form-group label-text size-s width-auto">
+			<label>输入框小号</label>
+			<div class="right-wrap">
+				<input type="text" />
+			</div>
+		</div>
+		<div class="form-group label-text  width-auto">
+			<label>输入框正常</label>
+			<div class="right-wrap">
+				<input type="text" />
+			</div>
+		</div>
+		<div class="form-group label-text size-l  width-auto">
+			<label>输入框大号</label>
+			<div class="right-wrap">
+				<input type="text" />
+			</div>
+		</div>
+		<div class="form-group label-date size-s width-auto">
+			<label>日期框小号</label>
+			<div class="right-wrap">
+				<div class="text-extend date size-s clearfloat">
+					<span class="icon iconfont">&#xe657;</span>
+					<input type="text" placeholder="日期"/>
+				</div>
+			</div>
+		</div>
+		<div class="form-group label-date  width-auto">
+			<label>日期框正常</label>
+			<div class="right-wrap">
+				<div class="text-extend date clearfloat">
+					<span class="icon iconfont">&#xe657;</span>
+					<input type="text" placeholder="日期"/>
+				</div>
+			</div>
+		</div>
+		<div class="form-group label-date size-l  width-auto">
+			<label>日期框大号</label>
+			<div class="right-wrap">
+				<div class="text-extend date size-l clearfloat">
+					<span class="icon iconfont">&#xe657;</span>
+					<input type="text" placeholder="日期"/>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group label-dic size-s width-auto">
+			<label>字典框小号</label>
+			<div class="right-wrap">
+				<div class="text-extend dic size-s clearfloat">
+					<span class="icon iconfont">&#xe659;</span>
+					<input type="text" placeholder="字典"/>
+				</div>
+			</div>
+		</div>
+		<div class="form-group label-dic  width-auto">
+			<label>字典框正常</label>
+			<div class="right-wrap">
+				<div class="text-extend dic clearfloat">
+					<span class="icon iconfont">&#xe659;</span>
+					<input type="text" placeholder="字典"/>
+				</div>
+			</div>
+		</div>
+		<div class="form-group label-dic size-l  width-auto">
+			<label>字典框大号</label>
+			<div class="right-wrap">
+				<div class="text-extend dic size-l clearfloat">
+					<span class="icon iconfont">&#xe659;</span>
+					<input type="text" placeholder="字典"/>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group label-select size-s  width-auto">
+			<label>下拉框小号</label>
+			<div class="right-wrap">
+				<div class="select" data-text="" data-value="">
+					<span class="icon iconfont select-icon">&#xe603;</span>
+					<span class="select-text">下拉框选择</span>
+					<ul class="select-options">
+						<li data-value="10">下拉项</li>
+						<li data-value="20">下拉项</li>
+						<li data-value="30">下拉项</li>
+						<li data-value="40">下拉项</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="form-group label-select  width-auto">
+			<label>下拉框正常</label>
+			<div class="right-wrap">
+				<div class="select" data-text="" data-value="">
+					<span class="icon iconfont select-icon">&#xe603;</span>
+					<span class="select-text">下拉框选择</span>
+					<ul class="select-options">
+						<li data-value="10">下拉项</li>
+						<li data-value="20">下拉项</li>
+						<li data-value="30">下拉项</li>
+						<li data-value="40">下拉项</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="form-group label-select size-l  width-auto">
+			<label>下拉框大号</label>
+			<div class="right-wrap">
+				<div class="select" data-text="" data-value="">
+					<span class="icon iconfont select-icon">&#xe603;</span>
+					<span class="select-text">下拉框选择</span>
+					<ul class="select-options">
+						<li data-value="10">下拉项</li>
+						<li data-value="20">下拉项</li>
+						<li data-value="30">下拉项</li>
+						<li data-value="40">下拉项</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="demo">
+		<h2 class="hx-page-header">slidemenu(侧边菜单) <small></small></h2>
+		<ul class="slidemenu">
+			<li class="slidemenu-item">
+				<a href="系统管理-密码修改.html">
+					<i class="icon iconfont slidemenu-item-icon">&#xe653;</i>
+					<span class="slidemenu-item-name">密码修改</span>
+				</a>
+			</li>
+			<li class="slidemenu-item active">
+				<a href="系统管理-机构管理.html">
+					<i class="icon iconfont slidemenu-item-icon">&#xe613;</i>
+					<span class="slidemenu-item-name">机构管理</span>
+				</a>
+			</li>
+			<li class="slidemenu-item isparent">
+				<a href="javascript:void(0)">
+					<i class="icon iconfont slidemenu-item-icon">&#xe617;</i>
+					<span class="slidemenu-item-name">系统定制</span>
+					<i class="icon iconfont slidemenu-item-slideicon">&#xe65e;</i>
+				</a>
+				<ul class="slidemenu-item-childmenu">
+					<li class="slidemenu-item-childmenu-item">
+						<a href="">字典管理</a>
+					</li>
+					<li class="slidemenu-item-childmenu-item">
+						<a href="">页面构建</a>
+					</li>
+					<li class="slidemenu-item-childmenu-item">
+						<a href="">组合查询项设置</a>
+					</li>
+				</ul>
+			</li>
+			<li class="slidemenu-item">
+				<a href="系统管理-专业操作.html">
+					<i class="icon iconfont slidemenu-item-icon">&#xe611;</i>
+					<span class="slidemenu-item-name">报表管理</span>
+				</a>
+			</li>
+			<li class="slidemenu-item">
+				<a href="系统管理-系统错误.html">
+					<i class="icon iconfont slidemenu-item-icon">&#xe68f;</i>
+					<span class="slidemenu-item-name">名册管理</span>
+				</a>
+			</li>
+			<li class="slidemenu-item isparent">
+				<a href="javascript:void(0)">
+					<i class="icon iconfont slidemenu-item-icon">&#xe610;</i>
+					<span class="slidemenu-item-name">权限设置</span>
+					<i class="icon iconfont slidemenu-item-slideicon">&#xe65e;</i>
+				</a>
+				<ul class="slidemenu-item-childmenu">
+					<li class="slidemenu-item-childmenu-item">
+						<a href="">用户管理</a>
+					</li>
+					<li class="slidemenu-item-childmenu-item active">
+						<a href="">用户组管理</a>
+					</li>
+					<li class="slidemenu-item-childmenu-item">
+						<a href="">角色管理</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+
+	<div class="demo">
+		<h2 class="hx-page-header">自动补全插件使用示例<small></small></h2>
+		<label for="">一般文本框</label><input id="input1" type="text" class="size-l">
+		<label for="">扩展文本框</label>
+		<div id="input2" class="text-extend size-l dic clearfloat">
+			<span class="icon iconfont">&#xe659;</span>
+			<input id="input2_value" type="text" placeholder="字典">
+		</div>
+		<div>
+			<input type="button" onclick="getValue_input1()" value="获取选中值(一般文本框)" />
+			<input type="button" onclick="getText_input1()" value="获取选中文本(一般文本框)" />
+			<input type="button" onclick="getValue_input2()" value="获取选中值(扩展文本框)" />
+			<input type="button" onclick="getText_input2()" value="获取选中文本(扩展文本框)" />
+		</div>
+
+		<script>
+			var autocomplete_input1 = $('#input1').hasngAutoComplete({ //实例后返回对象 此对象含两个方法getValue():获取当前选中值 getText():获取当前选中文本
+				height:null, 	//容器高度 type:number  default:自适应   
+				width:300, 	//容器宽度 type:number	default:自适应
+				targetInputId:null, 	//目标文本框id(eg:#id) type:string default:自己（即选择后赋值文本框 非直接文本框进行的实例需赋值）
+				size:10, 	//top条数（往后台传递 供后台使用）
+				data:{		//数据相关
+						dataSource:'data/autocomplete.json',	//请求url
+						valueField:'value',		//绑定 值字段名
+						textField:'text'	//绑定 文本字段名
+					}
+			});
+
+			var autocomplete_input2 = $('#input2').hasngAutoComplete({
+				targetInputId:'#input2_value',
+				size:10,
+				data:{
+						dataSource:'data/autocomplete.json',
+						valueField:'value',
+						textField:'text'
+					}
+			});
+
+			var getText_input1 = function(){
+				var result = autocomplete_input1.getText();
+				alert(result);
+			};
+			var getValue_input1 = function(){
+				var result = autocomplete_input1.getValue();
+				alert(result);
+			};
+			var getText_input2 = function(){
+				var result = autocomplete_input2.getText();
+				alert(result);
+			};
+			var getValue_input2 = function(){
+				var result = autocomplete_input2.getValue();
+				alert(result);
+			};
+		</script>
+	</div>
+
+
+	<div class="demo">
+		<h2 class="hx-page-header">toolbar(功能条) <small></small></h2>
+		<div class="toolbar">
+			<div class="toolbar-left">
+				<ul>
+					<li>文本内容或其他</li>
+					<li><input class="size-l" type="button" value="按钮" /></li>
+					<li><input class="size-l width-auto" type="text" value="文本框" /></li>
+				</ul>
+			</div>
+			<div class="toolbar-right">
+				<ul>
+					<li>文本内容或其他</li>
+					<li><input class="size-l" type="button" value="按钮" /></li>
+					<li><input class="size-l width-auto" type="text" value="文本框" /></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="demo">
+		<h2 class="hx-page-header">toolbar-gray(功能条-扩展灰色) <small></small></h2>
+		<div class="toolbar toolbar-gray">
+			<div class="toolbar-left">
+				<ul>
+					<li>文本内容或其他</li>
+					<li><input class="size-l theme-gray" type="button" value="按钮" /></li>
+					<li><input class="size-l width-auto" type="text" value="文本框" /></li>
+				</ul>
+			</div>
+			<div class="toolbar-right">
+				<ul>
+					<li>文本内容或其他</li>
+					<li><input class="size-l theme-gray" type="button" value="按钮" /></li>
+					<li><input class="size-l width-auto" type="text" value="文本框" /></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/malihu-custom-scrollbar-plugin-3.0.7/jquery.mousewheel.min.js"></script>
+	<script type="text/javascript" src="js/malihu-custom-scrollbar-plugin-3.0.7/jquery.mCustomScrollbar.js"></script> 
+	
+</body>
+</html>

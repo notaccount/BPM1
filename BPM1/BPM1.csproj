@@ -14,4 +14,16 @@
     <ProjectReference Include="..\BPM.Models\BPM.Models.csproj" />
     <ProjectReference Include="..\BPM.Repository\BPM.Repository.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ApiControllers\" />
+    <Folder Include="wwwroot\miniui\miniui\themes\gray\images\layout\" />
+    <Folder Include="wwwroot\miniui\miniui\themes\gray\images\panel\" />
+    <Folder Include="wwwroot\miniui\miniui\themes\gray\images\splitter\" />
+    <Folder Include="wwwroot\miniui\miniui\themes\gray\images\tabs\" />
+    <Folder Include="wwwroot\miniui\miniui\themes\gray\images\treegrid\" />
+    <Folder Include="wwwroot\miniui\miniui\themes\metro-green\images\button\" />
+    <Folder Include="wwwroot\miniui\miniui\themes\metro-orange\images\button\" />
+    <Folder Include="wwwroot\miniui\miniui\themes\metro\images\button\" />
+    <Folder Include="wwwroot\miniui\miniui\themes\pure\images\button\" />
+  </ItemGroup>
 </Project>

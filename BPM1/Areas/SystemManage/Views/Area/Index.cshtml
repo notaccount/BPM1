@@ -1,0 +1,238 @@
+﻿@using Hasng.CadreFile.WebApp;
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+ 
+}
+<style>
+    .mini-toolbar{
+        border: none;
+    }
+
+    .mini-grid-headerCell:last-child, .mini-grid-cell:last-child {
+        border-right: none;
+    }
+    .mini-toolbar {
+        padding:8px 0 !important;
+    }
+</style>
+<div class="listcont" id="form1">
+    <div class="listcontaine" style="position:absolute;top: 0px;left: 12px;right: 12px;bottom: 12px;">
+        <div class="mini-toolbar" style="padding:2px;border-top:0;border-left:0;border-right:0;">
+            <a class="mini-button gules" plain="true" onclick="AreaObj.btnDel()" style="margin-left:0px;">删除</a>
+            <a class="mini-button Blue" plain="true" onclick="AreaObj.btnSort()">排序</a>
+            <a class="mini-button Light" plain="true" onclick="AreaObj.btnStartUsing()">启用</a>
+            <a class="mini-button gules" plain="true" onclick="AreaObj.btnStopUsing()">禁用</a>
+            <a class="mini-button green" plain="true" onclick="AreaObj.btnExport()">导出</a>
+            <a class="mini-button Blue" plain="true" onclick="AreaObj.btnImport()">导入</a>
+            <a class="mini-button Light" plain="true" onclick="AreaObj.btnAreaInit()">区域初始化</a>
+            @*<a class="mini-button" plain="true" onclick="AreaObj.btnShowReport()">演示报表</a>*@
+        </div>
+
+        <div class="mini-fit">
+            <div id="grid" class="mini-treegrid" allowUnselect="true" style="width:100%;height:100%;" url="/SystemManage/Area/GetAllAreas" showTreeIcon="true" sortField="U_SortNo"
+                 treeColumn="Title" idField="ID" parentField="ParentID" resultAsTree="false" allowResize="false" expandOnLoad="true"  allowAlternating="true">
+                <div property="columns">
+                    <div type="indexcolumn" headerAlign="center">序号</div>
+                    <div field="Title" name="Title" width="220" headerAlign="center" align="left" allowSort="false">名称</div>
+                    <div field="Code" width="50" headerAlign="center" align="left" allowSort="false">编码</div>
+                    <div field="Level" width="50" headerAlign="center" align="left" allowSort="false">级别</div>
+                    <div field="IsEnable" width="50" headerAlign="center" align="center" allowSort="false" renderer="commObj.gridRenderer">是否启用</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //miniui初始化
+    mini.parse();
+
+    //排序、导出、导入、启用、停用
+    var AreaObj = {
+        chat: null,
+        //展示数据控件
+        grid: mini.get("grid"),
+        form: new mini.Form("#form1"),
+        //排序
+        btnSort: function () {
+            var row = AreaObj.grid.getSelected();
+            var pid = "";
+            var Parameter = [];
+            if (!!row) {
+                Parameter.push({
+                    paramName: 'ID5',
+                    paramValue: row.ID,
+                    Operation: 'Equal',
+                    Logic: "AND"
+                });
+            } else {
+                Parameter.push({
+                    paramName: 'ID5',
+                    paramValue: pid,
+                    Operation: 'Null',
+                    Logic: "AND"
+                });
+            }
+            var obj = {
+                tablename: "Power_Area",  //被排序的表名称
+                ParameterJson: mini.encode(Parameter)
+            };
+            //传入参数，回掉函数
+            orderObj.showWin(obj, function () {
+                //重新加载数据
+                AreaObj.grid.load(); //重新加载数据
+            });
+        },
+        //初始化
+        btnAreaInit: function () {
+            var row = AreaObj.grid.getSelected();
+            if (!!row) {
+                mini.confirm("确认要初始化该区域的信息吗？", "提示",
+                    function (action) {
+                        if (action == "ok") {
+                            AreaObj.form.loading("此功能耗时较长，请耐心等耐......");
+                            $.ajax({
+                                url: "/SystemManage/Area/AreaInit",
+                                data: { AreaCode: row.Code, AreaCodeName: row.Title },
+                                type: "Post",
+
+                                success: function (text) {
+                                    AreaObj.form.unmask();
+                                    if (text == 1) {
+                                        $("#btnUpdateRoleMenuCache").attr("vid",row.Code);
+                                        mini.alert("初始化成功", "", function () {
+                                            //AreaObj.chat.server.updateSystemCache("rolemenu");
+                                            
+                                            $("#btnUpdateRoleMenuCache").click();
+                                            AreaObj.grid.reload();
+
+                                        });
+                                    }
+                                },
+                                error: function () {
+                                    AreaObj.form.unmask();
+                                    mini.alert("出现异常！");
+                                }
+                            });
+                        }
+
+                    }
+                );
+            } else {
+                hasng.Alert();
+            }
+        },
+        //启用
+        btnStartUsing: function () {
+            var row = AreaObj.grid.getSelected();
+            if (row) {
+
+                mini.confirm("是否开启三员管理账号？", "提示",
+                    function (action) {
+                        $('.mini-button').removeClass('icon-style');
+                        if (action == "ok") {
+                            AreaObj.funcStartUsing(row, 1, "已启用");
+                        }
+                        else {
+                            AreaObj.funcStartUsing(row, 0, "已取消");
+                        }
+                    }
+                );
+            } else {
+                hasng.Alert();
+            }
+        },
+        funcStartUsing: function (row, isOpen, message) {
+            $.ajax({
+                url: "/SystemManage/Area/ModifyIsEnable",
+                data: { ID: row.ID, modifyType: 1, areaCode: row.Code, isOpen: isOpen },
+                type: "Post",
+                success: function (status) {
+                    mini.alert(message);
+                    AreaObj.grid.reload();
+                },
+                error: function () {
+                    mini.alert("出现异常！");
+                }
+            });
+        },
+        //停用
+        btnStopUsing: function () {
+            var row = AreaObj.grid.getSelected();
+            if (row) {
+                mini.confirm("是否禁用三员管理账号？", "提示",
+                    function (action) {
+                        $('.mini-button').removeClass('icon-style');
+                        if (action == "ok") {
+                            $.ajax({
+                                url: "/SystemManage/Area/ModifyIsEnable",
+                                data: { ID: row.ID, modifyType: 0, isOpen: 0 },
+                                type: "Post",
+                                success: function (status) {
+                                    mini.alert("已禁用。");
+                                    AreaObj.grid.reload();
+                                },
+                                error: function () {
+                                    mini.alert("出现异常！");
+                                }
+                            });
+                        }
+
+                    }
+                );
+            } else {
+                hasng.Alert();
+            }
+        },
+        //导出
+        btnExport: function () {
+            var Parameter = [];
+
+            CommControl_Export.btnExport("Power_Area", mini.encode(Parameter));
+        },
+        //导入
+        btnImport: function () {
+            CommControl_Import.btnImport("Power_Area", AreaObj.grid);
+        },
+        //删除
+        btnDel: function () {
+            var rows = AreaObj.grid.getSelected();
+            if (!!rows) {
+
+                if (rows.IsEnable != "False") {
+                    mini.alert("启用状态不可执行删除操作！");
+                    return;
+                }
+                hasng.DelConfirm(function () {
+                    var id = rows.ID;
+                    AreaObj.grid.loading("操作中，请稍后......");
+                    $.ajax({
+                        url: "/SystemManage/Area/Del?id=" + id,
+                        success: function (text) {
+                            AreaObj.grid.reload();
+                        },
+                        error: function () {
+                        }
+                    });
+                });
+            } else {
+                hasng.Alert();
+            }
+        },
+        btnShowReport: function () {
+
+            hasng.WinOpen({
+                url: "http://localhost:32802/Areas/Reports/ReportShow.aspx?ReportCode=&ParamId=",
+                title: "演示报表", width: 900, height: 620,
+                onload: function () { },
+                ondestroy: function (action) {
+                    //窗体销毁时表格按钮去掉自定义添加的样式
+                }
+            });
+        }
+    }
+
+ 
+    
+</script>

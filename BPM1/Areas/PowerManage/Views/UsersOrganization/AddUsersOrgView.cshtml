@@ -1,0 +1,117 @@
+﻿
+
+@{
+    //组织机构新增编辑界面
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+<style>
+    .bottom-btn {
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+    }
+</style>
+<div id="form" class="mini-fit">
+    <input type="hidden" name="ID" class="mini-hidden" />
+    <table class="table-sty">
+        <tr>
+            <td class="editLeftWidth label-item">机构名称：</td>
+            <td class="editRightWidth"><input name="Name" class="mini-textbox" required="true" requiredErrorText="机构名称必填" width="98%" /></td>
+            <td class="editLeftWidth label-item">上级机构：</td>
+            <td class="editRightWidth">
+                <input name="ParentID" id="ParentID" class="mini-treeselect" url="/PowerManage/UsersOrganization/GetJson" multiSelect="false" valueFromSelect="false"
+                       textField="Name" valueField="ID" parentField="ParentID" allowInput="true"
+                       showFolderCheckBox="false" expandOnLoad="true" width="98%" popupHeight="150" />
+            </td>
+        </tr>
+        <tr>
+            <td class="editLeftWidth label-item">状态：</td>
+            <td class="editRightWidth">
+                <input name="IsEnable" class="mini-combobox" textField="text" valueField="id" value="true" showNullItem="false" allowInput="false" required="true" requiredErrorText="状态必填" data="[{id:false,text:'禁用'},{id:true,text:'启用'}]" width="98%" />
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="editLeftWidth label-item">备注：</td>
+            <td colspan="3" class="editRightWidth"><input name="Remarks" id="Remarks" class="mini-textarea" style="width:96%;" vtype="maxLength:500;"/>
+        </tr>
+    </table>
+</div>
+<div class="mini-toolbar bottom-btn">
+    <a class="mini-button minibutton-save button-pre-bn" onclick="UserOrganizationObj.btnSave" style="width:60px;">保存</a>
+    <a class="mini-button minibutton-save button-pre-bn" onclick="UserOrganizationObj.btnCancel" style="width:60px;">取消</a>
+</div>
+
+<script type="text/javascript">
+    //miniui初始化
+    mini.parse();
+
+    var UserOrganizationObj = {
+        form: new mini.Form("#form"),
+        //反查
+        setData: function (data) {
+            if (data.action == "edit") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
+                $.ajax({
+                    url: "/PowerManage/UsersOrganization/GetModel?id=" + data.id,
+                    cache: false,
+                    success: function (text) {
+                        var o = mini.decode(text);
+                        UserOrganizationObj.form.setData(o);
+                        UserOrganizationObj.form.setChanged(false);
+                    }
+                });
+            } else if (data.action == "add") {
+                if (data.id != "" && data.id != null && data.id != undefined) {
+                    mini.getbyName("ParentID").setValue(data.id);
+                }
+            }
+        },
+        //保存事件
+        btnSave: function (e) {
+            //表单验证
+            UserOrganizationObj.form.validate();
+            if (UserOrganizationObj.form.isValid() == false) return;
+            var data = UserOrganizationObj.form.getData();      //获取表单多个控件的数据
+            $.ajax({
+                url: "/PowerManage/UsersOrganization/AddOrUpdate",
+                type: 'post',
+                data: { model: data },
+                cache: false,
+                success: function (text) {
+                    UserOrganizationObj.CloseWindow("save");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.alert(jqXHR.responseText);
+                    UserOrganizationObj.CloseWindow();
+                }
+            });
+        },
+        //取消事件
+        btnCancel: function () {
+            UserOrganizationObj.CloseWindow("cancel");
+        },
+        //窗口关闭
+        CloseWindow: function (action) {
+            /*if ((action == "cancel" || action == "close") && UserOrganizationObj.form.isChanged()) {
+                mini.confirm("数据被修改了，是否先保存？", "提示",
+                    function (action) {
+                        if (action != "ok") {
+                            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                            else window.close();
+                        }
+                    });
+            }
+            else {
+                if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                else window.close();
+            }*/
+
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+    };
+</script>

@@ -1,0 +1,120 @@
+
+@{
+    ViewData["Title"] = "AddOrUpdate";
+    //新增编辑角色
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+@using Hasng.CadreFile.WebApp
+
+<div id="form1" class="mini-fit form-include-remark">
+    <input type="hidden" name="ID" class="mini-hidden" />
+    <table  class="table-sty">
+        <tr>
+            <td class="editLeftWidth label-item">名称：</td>
+            <td class="editRightWidth"><input name="Name" class="mini-textbox" required="true" style="width:90%;" /></td>
+            <td class="editLeftWidth label-item">状态：</td>
+            <td class="editRightWidth">@HtmlEx.treeSelect("Status", "Status", "R01")</td>
+        </tr>
+        <tr>
+            <td class="editLeftWidth label-item">工作台：</td>
+            <td colspan="3" class="editRightWidth">
+                <input name="WorkbenchID" id="WorkbenchID" class="mini-combobox" textField="Name" valueField="ID" required="true" value="默认角色工作台"
+                       url="/PowerManage/Workbench/GetWorkBenchAllJson" showNullItem="false" allowInput="false" style="width:96%;" enabled="false"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="editLeftWidth label-item">备注：</td>
+            <td colspan="3" class="editRightWidth"><input name="Remarks" id="Remarks" class="mini-textarea" style="width:96%;height:100px;" vtype="maxLength:500;" onvalidation="Roleobj.IsValidateRemark" />
+        </tr>
+    </table>
+</div>
+<div class="mini-toolbar bottom-btn" >
+    <a class="mini-button minibutton-save button-pre-bn" onclick="Roleobj.btnSave()" >保存</a>
+    <a class="mini-button minibutton-save button-next-bn" onclick="Roleobj.btnCancel()" >取消</a>
+</div>
+
+<script type="text/javascript">
+    mini.parse();
+
+    var Roleobj = {
+        //工作台
+        workBench: mini.get("WorkbenchID"),
+        //状态
+        statusss: mini.get("Status"),
+        //备注
+        remarks: mini.get("Remarks"),
+        form: new mini.Form("form1"),
+        //反查
+        setData: function (data) {
+            if (data.action == "edit") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
+                $.ajax({
+                    url: "/PowerManage/Role/GetEntity?&id=" + data.id,
+                    cache: false,
+                    success: function (text) {
+                        var o = mini.decode(text);  //json对象转换为object对象
+                        Roleobj.form.setData(o);
+                        Roleobj.form.setChanged(false);
+                    }
+                });
+            } else {
+                //设置状态默认值
+                var statusData = Roleobj.statusss.getList();
+                Roleobj.statusss.setValue(statusData[0]);
+            }
+        },
+        //保存事件
+        btnSave: function (e) {
+            Roleobj.form.validate();
+            if (Roleobj.form.isValid() == false) return;
+            var o = Roleobj.form.getData();  //获取表单数据
+            $.ajax({
+                url: "/PowerManage/Role/AddOrUpdate",
+                type: 'post',
+                data: { data: o },
+                cache: false,
+                success: function (text) {                  
+                 Roleobj.CloseWindow("save");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    mini.alert(jqXHR.responseText);
+                    Roleobj.CloseWindow();
+                }
+            });
+        },
+        //取消事件
+        btnCancel: function () {
+            Roleobj.CloseWindow("cancel");
+        },
+        //窗口关闭
+        CloseWindow: function (action) {
+            /*if ((action == "cancel" || action == "close") && Roleobj.form.isChanged()) {
+                mini.confirm("数据被修改了，是否先保存？", "提示",
+                    function (action) {
+                        if (action != "ok") {
+                            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                            else window.close();
+                        }
+                    });
+            }
+            else {
+                if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+                else window.close();
+            }*/
+
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        },
+        //检查备注输入的是否超长
+        IsValidateRemark: function (e) {
+            if (e.isValid) {
+                //if (Roleobj.remarks.getList().Count > 500) {
+                //    e.errorText = "最多只能输入500个字符。";
+                //    e.isValid = false;
+                //}
+            }
+        }
+    };
+</script>
+

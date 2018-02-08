@@ -1,0 +1,181 @@
+﻿
+@{
+    ViewData["Title"] = "ImageUpload";
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+@using Hasng.CadreFile.WebApp
+<style>
+    .footer{
+        text-align:center;
+    }
+    .footer .mini-button {
+        float: inherit !important;
+    }
+
+    .mini-htmlfile .mini-buttonedit-button {
+        line-height: 24px !important;
+    }
+
+    .mini-buttonedit .mini-buttonedit-border {
+        height: 28px !important;
+    }
+</style>
+
+    <div id="form1">
+        <div style="text-align:center;padding-top: 26px;">
+            <input id="A0191A" name="A0191A" class="mini-hidden" />
+            <img id="A0191AselImg" alt="照片预览" width="150" height="200" src="/images/defaulthead.jpg" />
+        </div>
+        <div style="height:30px;padding:26px 0;text-align:center;">
+            照片：<input class="mini-htmlfile" id="file1" name="Fdata" style="width:300px;" limitType="*.jpg;*.png;*.jpeg;*.bmp" />
+        </div>
+    </div>
+    <div property="footer" class="footer clearfix">
+        <a class="mini-button" onclick="vControl_ImgUpload.btnImgUpload" style="width:60px;margin-right:20px;">上传</a>
+        <a class="mini-button" onclick="vControl_ImgUpload.btnCancel" style="width:60px;margin-right:20px;">取消</a>
+    </div>
+
+
+<script type="text/javascript">
+    mini.parse();
+    var ImageFile =' @ViewData["ImageFile"]';
+    var a0191a = '@ViewData["A019A"]';
+    var vControl_ImgUpload = {
+
+
+        //窗口内图片展示
+        selImg: $("#A0191AselImg"),
+        //图片Value
+        imgID: mini.get("A0191A"),
+        //支持上传的图片类型
+        fileTypes: new Array("image/jpeg", "image/png", "image/bmp"),
+        //图片数据
+        imgData: {},
+
+        //图片默认展示
+        showImage: function () {         
+            //图片展示
+            if (!!a0191a) {
+                $.ajax({
+                    url: "/CommonControls/FileUpload/GetImageContent?id=" + a0191a,
+                    cache: false,
+                    async: false,
+                    success: function (file) {
+                        if (file != "") {
+                            vControl_ImgUpload.selImg.attr({ "src": file });
+                        }
+                    }
+                });
+            }
+            else {
+                vControl_ImgUpload.selImg.attr({ "src": "/images/defaulthead.jpg" });
+            }
+        },
+        //图片上传按钮事件:窗口显示
+        btnShowWin: function () {
+            vControl_ImgUpload.winImg.showAtPos("center", "middle");
+        },
+
+        //关闭窗口
+        CloseWindow: function (action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        },
+        //取消事件
+        btnCancel: function (e) {
+            vControl_ImgUpload.CloseWindow("cancel");
+        },
+        //图片上传
+        btnImgUpload: function () {
+            if (!vControl_ImgUpload.imgData.Title) {
+                mini.alert("文件不存在", "提示");
+                return;
+            }
+            //图片类型验证
+            if (vControl_ImgUpload.fileTypes.indexOf(vControl_ImgUpload.imgData.FileType) > -1 && vControl_ImgUpload.imgData.ImageFile != "") {
+               // vControl_ImgUpload.imgBrowse.attr({ "src": vControl_ImgUpload.imgData.ImageFile });
+            }
+            else {
+                return;
+            }
+
+            //提交
+            $.ajax({
+                url: "/CommonControls/FileUpload/ImagesUpload",
+                type: "post",
+                datatype: "json",
+                data: vControl_ImgUpload.imgData,
+                success: function (result) {
+                    if (result) {
+                        vControl_ImgUpload.imgID.setValue(result);
+                        $.ajax({
+                            url: "/PowerManage/Users/updateImage",
+                            type: "post",
+                            datatype: "json",
+                            data: { A0191A: result },
+                            success: function (result) {                             
+                                if (result) {
+                                    mini.alert("上传成功", "提示", function () { vControl_ImgUpload.CloseWindow(result); });
+                                    //mini.alert("上传成功");
+                                   
+                                }
+                            },
+                            error: function () { }
+                        });
+
+                    }
+                },
+                error: function () { }
+            });
+        },
+    
+        //选择图片改变事件
+        selectFileChange: function (data) {
+
+            vControl_ImgUpload.imgData.Title = data.Title;
+            vControl_ImgUpload.imgData.FileType = data.FileType;
+            vControl_ImgUpload.imgData.Size = data.Size;
+            vControl_ImgUpload.imgData.File = data.File;
+            vControl_ImgUpload.imgData.ImageFile = data.ImageFile;
+
+            //图片类型验证
+            if (vControl_ImgUpload.fileTypes.indexOf(vControl_ImgUpload.imgData.FileType) > -1 && vControl_ImgUpload.imgData.ImageFile != "") {
+                vControl_ImgUpload.selImg.attr({ "src": vControl_ImgUpload.imgData.ImageFile });
+            }
+
+        }
+
+    };
+
+    $(function () {
+
+        $("#file1").change(function (e) {
+            var inputFile = $("#file1 > input:file")[0];
+
+            $.ajaxFileUpload({
+                url: "/CommonControls/FileUpload/UploadFilesAjax",                 //用于文件上传的服务器端请求地址
+                fileElementId: inputFile,               //文件上传域的ID
+                //data: { a: 1, b: true },            //附加的额外参数
+                dataType: 'json',                   //返回值类型 一般设置为json
+                success: function (data, status)    //服务器成功响应处理函数
+                {
+                    vControl_ImgUpload.selectFileChange(data);
+                },
+                error: function (data, status, e)   //服务器响应失败处理函数
+                {
+                    vControl_ImgUpload.selectFileChange(data);
+                },
+                complete: function () {
+                    var jq = $("#file1 > input:file");
+                    jq.before(inputFile);
+                    jq.remove();
+                }
+            });
+        });
+
+
+        //图片展示
+        vControl_ImgUpload.showImage();
+    });
+</script>
+

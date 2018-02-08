@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    //配置权限
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+
+<style>
+    .mini-toolbar {
+        border:0 none;
+        padding:8px 0 !important;
+    }
+    .mini-fit {
+        padding-left:3px;
+    }
+</style>
+
+<div  id="form1"  class="mini-fit" >
+    <input type="hidden" name="MenuID" class="mini-hidden" />
+    <ul id="tree" class="mini-tree"  style="width:100%;padding:2px;"
+        showTreeIcon="true" textField="text" idField="id" parentField="pid" resultAsTree="false" checkRecursive="false" autoCheckParent="false"
+        showCheckBox="false" allowSelect="false" enableHotTrack="false"></ul>
+</div>
+
+<script>
+    //miniui初始化
+    mini.parse();
+
+    //反查、全选、提交数据
+    var chooseMenusObj = {
+        //form对象
+        form: new mini.Form("#form1"),
+        tree: mini.get("tree"),
+        roleId: "",
+        areaCode: "",
+        //反查
+        setData: function (data) {
+            if (data.action == "showmenu") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
+                chooseMenusObj.roleId = data.id;
+                chooseMenusObj.areaCode = data.AreaCode;
+
+                //chooseMenusObj.CheckPowerNode();
+                var url = "/PowerManage/Role/GetPowerMenuJson?roleId=" + data.id;
+
+                chooseMenusObj.tree.load(url);
+                chooseMenusObj.tree.setCheckRecursive(true);
+            }
+        },
+        CloseWindow: function (action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        }
+    }
+</script>

@@ -1,0 +1,198 @@
+﻿
+@{
+    ViewData["Title"] = "AddOrUpdate";
+    //新增用户
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+@using Hasng.CadreFile.WebApp
+<style>
+    .table-sty tr td{
+        text-align:right;
+    }
+    .mini-toolbar{
+        border-left:none;
+        border-right:none;
+    }
+</style>
+<div id="form1" class="mini-fit">
+    <input name="ID" class="mini-hidden" />
+    <table class="table-sty">
+        <tr>
+            <td class="editLeftWidth label-item">姓名：</td>
+            <td class="editRightWidth"><input name="Cn" class="mini-textbox" required="true" width="90%" /></td>
+            <td class="editLeftWidth label-item">登录账户名：</td>
+            <td class="editRightWidth"><input name="UID" class="mini-textbox" required="true" width="90%" blur="addUserObj.validataCodeOnly" /></td>
+        </tr>
+        <tr>
+            <td class="editLeftWidth label-item">岗位：</td>
+            <td class="editRightWidth">
+                <input name="StationsID" id="StationsID" class="mini-combobox" textField="Name" valueField="ID"
+                       url="/PowerManage/Station/GetStationJson" showNullItem="false" allowInput="false" required="true" width="90%" />
+            </td>
+            <td class="editLeftWidth label-item">状态：</td>
+            <td class="editRightWidth">
+                @*@HtmlEx.treeSelect("Status", "Status", "U10")*@
+            </td>
+
+            @*<td class="editLeftWidth label-item">所属机构：</td>
+            <td class="editRightWidth">
+                <input id="OrgID" name="OrgID" class="mini-treeselect" url="/PowerManage/UsersOrganization/GetJson" multiSelect="false" valueFromSelect="false" textField="Name" valueField="ID" parentField="ParentID" allowInput="false"
+                       showFolderCheckBox="false" expandOnLoad="true" required="true" requiredErrorText="所属组织机构必选" width="90%" popupHeight="150" />
+            </td>*@
+        </tr>
+        
+    </table>
+</div>
+
+<div class="mini-toolbar bottom-btn">
+    <a class="mini-button minibutton-save button-pre-bn" onclick="addUserObj.btnSave" style="width:60px;margin-right:20px;">保存</a>
+    <a class="mini-button minibutton-save button-pre-bn" onclick="addUserObj.btnCancel" style="width:60px;">取消</a>
+</div>
+<script type="text/javascript">
+    //miniui初始化
+    mini.parse();
+
+    ////tree对象
+    //var OrgObj = {
+    //    tree: mini.get("OrgID"),
+    //    data: mini.get("OrgID").getList()
+    //};
+
+    //提交、取消、关闭事件
+    var addUserObj = {
+        a_status: mini.get("Status"),
+        station: mini.get("StationsID"),
+        //操作类型
+        actionType: "",
+        //form对象
+        form: new mini.Form("#form1"),
+        //反查，接收传递过来的数据，初始化
+        setData: function (data) {
+            //给操作类型赋值
+            addUserObj.actionType = data.action;
+
+            if (data.action == "edit") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
+                $.ajax({
+                    url: "/PowerManage/Users/GetEntity?&id=" + data.id,
+                    cache: false,
+                    success: function (text) {
+                        var o = mini.decode(text);
+
+                        addUserObj.form.setData(o);
+                        //OrgObj.tree.setValue(data.OrgId);
+                        addUserObj.form.setChanged(false);
+                    }
+                });
+            }
+            else {
+                //新增时给默认值
+                //OrgObj.tree.setValue(data.OrgId);
+                var statusData = addUserObj.a_status.getList();
+                addUserObj.a_status.setValue(statusData[0]);
+            }
+        },
+        //窗口关闭
+        CloseWindow: function (action) {
+            if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();
+        },
+        //保存数据
+        btnSave: function (e) {
+            addUserObj.form.validate();
+            if (addUserObj.form.isValid() == false) return;
+
+            var o = addUserObj.form.getData();
+            //********编辑时验证********//
+            if (addUserObj.actionType == "edit") {
+                $.ajax({
+                    url: "/PowerManage/Users/FindOnlyEdit",
+                    type: 'post',
+                    data: { UID: o.UID, ID: o.ID },
+                    cache: false,
+                    success: function (text) {
+                        if (text) {
+                            //验证通过，再执行插入数据
+                            $.ajax({
+                                url: "/PowerManage/Users/AddOrUpdate",
+                                type: 'post',
+                                data: { data: o },
+                                cache: false,
+                                success: function (text) {
+                                    addUserObj.CloseWindow("save");
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    mini.alert(jqXHR.responseText);
+                                    addUserObj.CloseWindow();
+                                }
+                            });
+                        }
+                        else {
+                            mini.alert("您输入的账户已存在。");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(jqXHR.responseText);
+                        menuAddObj.CloseWindow();
+                    }
+                });
+            } else {
+                //******新增时验证******//
+                //执行保存前，先验证 账户是否唯一
+                $.ajax({
+                    url: "/PowerManage/Users/FindOnly",
+                    type: 'post',
+                    data: { UID: o.UID },
+                    cache: false,
+                    success: function (text) {
+                        if (text) {
+                            //验证通过，再执行插入数据
+                            $.ajax({
+                                url: "/PowerManage/Users/AddOrUpdate",
+                                type: 'post',
+                                data: { data: o },
+                                cache: false,
+                                success: function (text) {
+                                    addUserObj.CloseWindow("save");
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    mini.alert(jqXHR.responseText);
+                                    addUserObj.CloseWindow();
+                                }
+                            });
+                        }
+                        else {
+                            mini.alert("您输入的账户已存在。");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(jqXHR.responseText);
+                        menuAddObj.CloseWindow();
+                    }
+                });
+            }
+        },
+        //取消
+        btnCancel: function (e) {
+            addUserObj.CloseWindow("cancel");
+        },
+        //验证账户唯一
+        validataCodeOnly: function () {
+            var uid = mini.get("UID").getValue();
+            $.ajax({
+                url: "/PowerManage/Users/FindOnly",
+                type: 'post',
+                data: { UID: uid },
+                cache: false,
+                success: function (text) {
+                    if (!text) { mini.alert("您输入的账户已存在。", "提示"); return; }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseText);
+                    menuAddObj.CloseWindow();
+                }
+            });
+        }
+    };
+</script>

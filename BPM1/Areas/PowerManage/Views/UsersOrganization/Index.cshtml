@@ -1,0 +1,153 @@
+﻿
+@{
+    //组织机构管理
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+<div class="listcont">
+    <div class="listcontainer" style="position:absolute;top: 0px;left: 14px;right: 15px;bottom: 15px;">
+        <div class="mini-toolbar" style="padding:2px;border-top:0;border-left:0;border-right:0;">
+            <a class="mini-button" plain="true" onclick="UserOrganizationObj.btnAdd">新增</a>
+            <a class="mini-button" plain="true" onclick="UserOrganizationObj.btnEdit">编辑</a>
+            <a class="mini-button" plain="true" onclick="UserOrganizationObj.btnDel">删除</a>
+            <a class="mini-button" plain="true" onclick="UserOrganizationObj.btnSort">排序</a>
+        </div>
+
+        <div class="gridcon">
+            <div id="grid" class="mini-treegrid" style="width:100%;height:100%;" url="/PowerManage/UsersOrganization/GetJson" showTreeIcon="true"
+                 treeColumn="Name" idField="ID" parentField="ParentID" resultAsTree="false" allowResize="false" expandOnLoad="true">
+                <div property="columns">
+                    <div type="indexcolumn"></div>
+                    <div field="Name" name="Name" width="450" headerAlign="center" align="left" allowSort="false">机构名称</div>
+                    <div field="IsEnable" width="80" headerAlign="center" align="left" allowSort="false" renderer="commObj.gridRenderer">是否启用</div>
+                    <div field="U_Creator" width="80" headerAlign="center" align="left" allowSort="false">创建人</div>
+                    <div field="U_CreateDate" width="80" headerAlign="center" align="left" allowSort="false" dateFormat="yyyy-MM-dd">创建时间</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //初始化环境
+    mini.parse();
+
+    var UserOrganizationObj = {
+        //表格对象
+        grid: mini.get("grid"),
+        //增加事件
+        btnAdd: function () {
+            var maxIndex = 1;
+            var orgId = "";
+            var orgParentId = "";
+            var row = UserOrganizationObj.grid.getSelected();
+            if (!!row) {
+                orgId = row.ID;
+            }
+            hasng.WinOpen({
+                url: "/PowerManage/UsersOrganization/AddUsersOrgView",
+                title: "新增机构", width: 700, height: 360,
+                onload: function (iframe) {
+                    
+                    var data = {
+                        action: "add",
+                        id: orgId,
+                        sort: maxIndex
+                    };
+                    iframe.contentWindow.UserOrganizationObj.setData(data);
+                },
+                ondestroy: function (action) {
+                    UserOrganizationObj.grid.reload();
+                }
+            });
+        },
+        //编辑事件
+        btnEdit: function () {
+            var row = UserOrganizationObj.grid.getSelected();
+            if (row) {
+                hasng.WinOpen({
+                    url: "/PowerManage/UsersOrganization/AddUsersOrgView",
+                    title: "编辑机构", width: 700, height: 360,
+                    onload: function (iframe) {
+                        
+                        var data = {
+                            action: "edit",
+                            id: row.ID
+                        };
+                        iframe.contentWindow.UserOrganizationObj.setData(data);
+                    },
+                    ondestroy: function (action) {
+                        UserOrganizationObj.grid.reload();
+                    }
+                });
+            } else {
+                 hasng.Alert();
+            }
+        },
+        //删除事件
+        btnDel: function () {
+            var row = UserOrganizationObj.grid.getSelected();
+            if (row) {
+                if (typeof (row.children) != "undefined" && row.children.length > 0) {
+                    mini.alert("所选数据下有从属数据，禁止删除");
+                    return;
+                }
+                hasng.DelConfirm(function () {
+                            var id = row.ID;
+                            UserOrganizationObj.grid.loading("操作中，请稍后......");
+                            $.ajax({
+                                url: "/PowerManage/UsersOrganization/Delete",
+                                data: { "id": row.ID },
+                                type: "Post",
+                                async: false,
+                                success: function (text) {
+                                    mini.alert("删除成功！");
+                                    UserOrganizationObj.grid.reload();
+                                },
+                                error: function () {
+                                    mini.alert("出现异常！");
+                                }
+                            });
+                    });
+            } else {
+                mini.alert("请选中一条数据！", "", function () { $('.mini-button').removeClass('icon-style'); });
+            }
+        },
+        //排序事件
+        btnSort: function () {
+            var row = UserOrganizationObj.grid.getSelected();
+            var pid = "";
+            var Parameter = [];
+            if (!!row) {
+                Parameter.push({
+                    paramName: 'ID31',
+                    paramValue: row.ID,
+                    Operation: 'Equal',
+                    Logic: "AND"
+                });
+            } else {
+                Parameter.push({
+                    paramName: 'ID31',
+                    paramValue: pid,
+                    Operation: 'Null',
+                    Logic: "AND"
+                });
+            }
+            var obj = {
+                tablename: "Power_UserOrganization",  //被排序的表名称
+                ParameterJson: mini.encode(Parameter)
+            };
+            //传入参数，回掉函数
+            orderObj.showWin(obj, function () {
+                //重新加载数据
+                UserOrganizationObj.grid.load();
+            });
+        },
+        //导出事件
+        btnExport: function () {
+            var Parameter = [];
+
+            CommControl_Export.btnExport("Power_UserOrganization", mini.encode(Parameter));
+        }
+    };
+</script>

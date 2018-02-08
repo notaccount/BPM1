@@ -1,0 +1,326 @@
+
+@{
+    ViewData["Title"] = "Index";
+    //角色管理主界面
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+
+<script type="text/javascript">
+    @Html.Raw(ViewData["CommonDic"])
+</script>
+<style>
+    .mini-grid-headerCell:last-child, .mini-grid-cell:last-child {
+        border-right: none;
+    }
+    .mini-toolbar {
+        padding:10px 0 !important;
+    }
+    .mini-panel-border {
+        border-top:1px solid #dfdfdf;
+    }
+    #form1.searchBox + .mini-toolbar {
+        padding:10px 0 !important;
+    }
+    .button-right {
+        right: 0px !important;
+    }
+</style>
+<div class="listcont">
+    <div class="listcontainer" style="position:absolute;top: 0px;left: 12px;right: 12px;bottom: 12px;">
+
+        <div style="width:100%;position:relative;">
+            <div id="form1" class="searchBox">
+                <a class="mini-button green" plain="true" iconCls="icon-add" onclick="Roleobj.btnAdd" style="margin-left:0px;">新增</a>
+                <a class="mini-button Pink" plain="true" iconCls="icon-add" onclick="Roleobj.btnEdit">编辑</a>
+                <a class="mini-button gules" plain="true" iconCls="icon-add" onclick="Roleobj.btnDel">删除</a>
+                <a class="mini-button" plain="true" iconCls="icon-add" onclick="Roleobj.choosePerson">对应人员</a>
+                <a class="mini-button gules" plain="true" iconCls="icon-add" onclick="Roleobj.chooseMenu()">分配权限</a>
+                <a class="mini-button Blue" plain="true" iconCls="icon-add" onclick="Roleobj.btnSort">排序</a>
+                <a class="mini-button green" plain="true" iconCls="icon-add" onclick="Roleobj.btnExport">导出</a>
+                <a class="mini-button gules" plain="true" iconCls="icon-add" onclick="Roleobj.showMenu()">查看权限</a>
+            </div>
+            <div class="mini-toolbar button-right" style="padding:2px;border:0;width:310px;">
+                <input class="mini-textbox" name="Name" id="Name" emptyText="请输入角色名称" style="width:250px;float:left;" onenter="Roleobj.keyEnter()" />
+                <a class="mini-button search-button-my" iconCls="icon-download" plain="true" onclick="Roleobj.btnSearch()">查询</a>
+            </div>
+        </div>
+        <div class="mini-fit">
+            <div id="grid" class="mini-datagrid"  allowMoveColumn="false" style="width:100%;height:100%;" onbeforeload="basePageSizeObj.beforeload"
+                 url="/PowerManage/Role/GetPagerJson" idField="ID" allowResize="false" allowAlternating="true">
+                <div property="columns">
+                    <div type="indexcolumn"></div>
+                    <div field="Name" width="120" headerAlign="center" align="left" allowSort="false">角色名称</div>
+                    <div field="WorkbenchID" width="120" headerAlign="center" align="left" allowSort="false" renderer="workBenchObj.onRenderer">工作台</div>
+                    <div field="Status" width="80" headerAlign="center" align="left" allowSort="false" renderer="cacheCode.renderer">状态</div>
+                    <div field="U_IsSystem" width="60" headerAlign="center" align="left" allowSort="false" renderer="commObj.gridRenderer">是否系统内置</div>
+                    <div field="Remarks" width="220" headerAlign="center" align="left" allowSort="false">备注</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    //miniui初始化
+    mini.parse();
+
+    //增、编.....对象
+    var Roleobj = {
+        grid: mini.get("grid"),
+        //enter事件
+        keyEnter: function () {
+            Roleobj.btnSearch();
+        },
+        //查找事件
+        btnSearch: function () {
+            var Parameter = [];
+            //名称
+            var vName = mini.get("Name").value;
+            if (!!vName) {
+                Parameter.push({
+                    paramName: 'Name',
+                    paramValue: vName,
+                    Operation: 'Like',
+                    Logic: "AND"
+                });
+            }
+            Roleobj.grid.load({ ParameterJson: JSON.stringify(Parameter) });
+            //Roleobj.grid.load({ roleName: vName });
+        },
+        //增加事件
+        btnAdd: function () {
+            var maxIndex = 1;
+            hasng.WinOpen({
+                url: "/PowerManage/Role/RoleAddOrEdit?menuId=" + GetQuery("menuId"),
+                title: "新增", width: 670, height: 340,
+                onload: function (iframe) {
+
+                    var data = { action: "add" };
+                    iframe.contentWindow.Roleobj.setData(data);
+                },
+                ondestroy: function (action) {
+                    Roleobj.grid.reload();
+                }
+            });
+        },
+        //编辑事件
+        btnEdit: function () {
+            var row = Roleobj.grid.getSelected();
+            if (!!row) {
+                $.ajax({
+                    url: "/PowerManage/Role/GetEntity?id=" + row.ID,
+                    cache: false,
+                    success: function (data) {
+                        var dataJson = mini.decode(data);
+
+                        if (dataJson.U_IsSystem == true) {
+                            mini.alert("系统内置账户，不允许编辑！");
+                        } else {
+                            hasng.WinOpen({
+                                url: "/PowerManage/Role/RoleAddOrEdit?menuId=" + GetQuery("menuId"),
+                                title: "编辑", width: 670, height: 340,
+                                onload: function (iframe) {
+
+                                    var data = { action: "edit", id: row.ID };
+                                    iframe.contentWindow.Roleobj.setData(data);
+                                },
+                                ondestroy: function (action) {
+                                    Roleobj.grid.reload();
+                                }
+                            });
+                        }
+                    }
+                });
+            } else {
+                hasng.Alert();
+            }
+        },
+        //删除事件
+        btnDel: function () {
+            var rows = Roleobj.grid.getSelected();
+            if (!!rows) {
+                //不是系统内置账户可以删除
+                hasng.DelConfirm(function () {
+                    var id = rows.ID;
+                    //删除之前判断是否是系统内置账户
+                    $.ajax({
+                        url: "/PowerManage/Role/GetEntity?id=" + id,
+                        cache: false,
+                        async: false,
+                        success: function (data) {
+                            //转换成json对象
+                            var dataJson = mini.decode(data);
+                            if (dataJson.U_IsSystem == true) {
+                                mini.alert("系统内置账户，不允许删除！");
+                            } else {
+                                //不是系统内置账户可以删除
+                                Roleobj.grid.loading("操作中，请稍后......");
+                                $.ajax({
+                                    url: "/PowerManage/Role/Delete",
+                                    data: { "id": rows.ID },
+                                    type: "Post",
+                                    success: function (text) {
+                                        mini.alert("删除成功！");
+                                        Roleobj.grid.reload();
+                                    },
+                                    error: function () {
+                                        mini.alert("出现异常！");
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+            } else {
+                hasng.Alert();
+            }
+        },
+        //对应人员
+        choosePerson: function () {
+            var row = Roleobj.grid.getSelected();
+            if (!!row) {
+                hasng.WinOpen({
+                    url: "/PowerManage/Role/ChoosePersons",
+                    title: "对应人员", width: 1000, height: 500,
+                    onload: function (iframe) {
+                        var data = { action: "selectUser", id: row.ID, AreaCode: row.U_AreaCode };
+                        iframe.contentWindow.UserObj.setData(data);
+                    },
+                    ondestroy: function (action) {
+                        //grid.onload();
+                    }
+                });
+            } else {
+                hasng.Alert();
+            }
+
+        },
+        //分配权限
+        chooseMenu: function () {
+            var row = Roleobj.grid.getSelected();
+            if (!!row) {
+                if (row.U_IsSystem == "True") {
+                    mini.alert("系统内置账户，不允许分配权限！");
+                } else { 
+                    hasng.WinOpen({
+                        url: "/PowerManage/Role/ChooseMenus",
+                        title: "分配权限", width: 600, height: 500,
+                        onload: function (iframe) {
+
+                            var data = { action: "choosemenu", id: row.ID, AreaCode: row.U_AreaCode };
+                            iframe.contentWindow.chooseMenusObj.setData(data);
+                        },
+                        ondestroy: function (action) {
+                            Roleobj.grid.reload();
+                        }
+                    });
+                }
+            
+            }
+            else {
+                hasng.Alert();
+            }
+        },
+        //查看权限
+        showMenu: function () {
+            var row = Roleobj.grid.getSelected();
+            if (!!row) {
+                hasng.WinOpen({
+                    url: "/PowerManage/Role/showMenus",
+                    title: "查看权限", width: 600, height: 500,
+                    onload: function (iframe) {
+
+                        var data = { action: "showmenu", id: row.ID, AreaCode: row.U_AreaCode };
+                        iframe.contentWindow.chooseMenusObj.setData(data);
+                    },
+                    ondestroy: function (action) {
+                        Roleobj.grid.reload();
+                    }
+                });
+            }
+            else {
+                hasng.Alert();
+            }
+        },
+        //排序
+        btnSort: function () {
+            var row = Roleobj.grid.getSelected();
+            var Parameter = [];
+            var obj = {
+                tablename: "Power_Role",  //被排序的表名称
+                ParameterJson: mini.encode(Parameter)
+            };
+            //传入参数，回掉函数
+            orderObj.showWin(obj, function () {
+                Roleobj.grid.load();
+            });
+        },
+        //导出
+        btnExport: function () {
+            var Parameter = [];
+
+            //名称
+            var vName = mini.get("Name").value;
+            if (!!vName) {
+                Parameter.push({
+                    paramName: 'ID2',
+                    paramValue: vName,
+                    Operation: 'Like',
+                    Logic: "AND"
+                });
+            }
+
+            CommControl_Export.btnExport("Power_Role", mini.encode(Parameter));
+        },
+
+        //是否系统内置
+        onIsSystem: function (e) {
+            var Genders = [{ key: 'true', value: '是' }, { key: 'false', value: '否' }];
+            for (var i = 0, l = Genders.length; i < l; i++) {
+                var g = Genders[i];
+                if (g.key.toLowerCase() == e.value.toLowerCase())
+                    return g.value;
+            }
+            return "";
+        }
+    };
+
+    //工作显示
+    var workBenchObj = {
+        data: null,
+        //数据加载
+        loadData: function () {
+            $.ajax({
+                type: "GET",
+                url: "/PowerManage/Workbench/GetWorkBenchAllJson",
+                dataType: "json",
+                success: function (data1) {
+                    workBenchObj.data = data1;
+                },
+                error: function () {
+                }
+            });
+        },
+        //行加载：岗位
+        onRenderer: function (e) {
+            if (!!workBenchObj.data) {
+                for (var i = 0, l = workBenchObj.data.length; i < l; i++) {
+                    var g = workBenchObj.data[i];
+                    if (g.ID == e.value)
+                        return g.Name;
+                }
+            }
+            return "";
+        }
+    };
+
+    //初始化加载
+    $(function () {
+        //数据列表加载
+        Roleobj.grid.load();
+        //工作台
+        workBenchObj.loadData();
+    })
+
+</script>

@@ -1,0 +1,194 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+
+<style>
+    .mini-splitter-pane2 .mini-panel-border {
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+    }
+
+    .mini-grid-headerCell:last-child, .mini-grid-cell:last-child {
+        border-right: none;
+    }
+
+    #form1.searchBox + .mini-toolbar {
+        padding: 10px 0 !important;
+    }
+
+    .mini-toolbar {
+        padding: 10px 0 !important;
+    }
+    .bottom-btn{
+        border:none;
+    }
+</style>
+<div class="listcont">
+    <div class="listcontainer" style="position:absolute;top:12px;left: 12px;right: 12px;bottom: 12px;">
+        <div class="mini-splitter" style="width:100%;height:100%;">
+            <div size="240" minSize="260" showCollapseButton="false">
+                <div class="mini-fit">
+                    <ul id="tree" class="mini-tree" url="/PowerManage/UsersOrganization/GetJson" style="width:100%;"
+                        showTreeIcon="true" textField="Name" idField="ID" parentField="ParentID" resultAsTree="false" expandOnLoad="true" onnodeselect="A01Orgobj.SetData()"></ul>
+                </div>
+            </div>
+            <div>
+                <div class="mini-fit">
+                    <ul id="A01Org" name="A01Org" class="mini-tree" url="/FileManage/B00/GetJson" style="width:100%;padding:20%;" allowUnselect="true" showCheckBox="true" multiSelect="true" autoCheckParent="false" checkRecursive="false" 
+                        ondrawnode="A01Orgobj.onDrawNode" showTreeIcon="true" imgPath="" textField="B0001" idField="B0000" parentField="B000" resultAsTree="false"></ul>                   
+                </div>
+                <div class="mini-toolbar bottom-btn">
+                    <a class="mini-button minibutton-save button-pre-bn green" iconCls="icon-add" plain="true" onclick="A01Orgobj.btnSave" style="margin-left:10px;">保存</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<script type="text/javascript">
+    //miniui初始化
+    mini.parse();    
+
+    var UserOrganizationObj = {
+        //表格对象
+        tree: mini.get("tree"),
+        //选中树
+        selectNode: null,
+        //增加事件
+        btnAdd: function () {
+            hasng.WinOpen({
+                url: "/PowerManage/UsersOrganization/AddUsersOrgView",
+                title: "新增用户组织机构", width: 700, height: 260,
+                onload: function (iframe) {
+
+                    var data = {
+                        action: "add"
+                    };
+                    iframe.contentWindow.UserOrganizationObj.setData(data);
+                },
+                ondestroy: function (action) {
+                    UserOrganizationObj.tree.reload();
+                }
+            });
+        },
+        //编辑事件
+        btnEdit: function () {
+            var row = UserOrganizationObj.tree.getSelectedNode();
+            if (row) {
+                hasng.WinOpen({
+                    url: "/PowerManage/UsersOrganization/AddUsersOrgView",
+                    title: "编辑用户组织机构", width: 700, height: 260,
+                    onload: function (iframe) {
+
+                        var data = {
+                            action: "edit",
+                            id: row.ID
+                        };
+                        iframe.contentWindow.UserOrganizationObj.setData(data);
+                    },
+                    ondestroy: function (action) {
+                        UserOrganizationObj.tree.reload();
+                    }
+                });
+            } else {
+                hasng.Alert();
+            }
+        },
+        //删除事件
+        btnDel: function () {
+            var row = UserOrganizationObj.tree.getSelectedNode();
+            if (row) {
+                if (typeof (row.children) != "undefined" && row.children.length > 0) {
+                    mini.alert("所选数据下有从属数据，禁止删除");
+                    return;
+                }
+                hasng.DelConfirm(function () {
+                    var id = row.ID;
+                    UserOrganizationObj.tree.loading("操作中，请稍后......");
+                    $.ajax({
+                        url: "/PowerManage/UsersOrganization/Delete",
+                        data: { "id": row.ID },
+                        type: "Post",
+                        async: false,
+                        success: function (text) {
+                            mini.alert("删除成功！", "提示", function () {
+                                UserOrganizationObj.tree.reload();
+                            });
+                        },
+                        error: function () {
+                            mini.alert("出现异常！");
+                        }
+                    });
+                });
+            } else {
+                mini.alert("请选中一条数据！", "", function () { $('.mini-button').removeClass('icon-style'); });
+            }
+        }
+    };
+
+    var A01Orgobj = {
+        //表格对象
+        tree: mini.get("A01Org"),
+        //反查
+        SetData: function () {
+
+            var row = UserOrganizationObj.tree.getSelectedNode();
+            if (row) {
+                UserOrganizationObj.selectNode = row;
+
+                $.ajax({
+                    url: "/FileManage/B0101/GetOrgList?userOrgId=" + row.ID,
+                    cache: false,
+                    success: function (text) {
+                        var o = mini.decode(text);
+                        var values = "";
+                        for (i = 0; i < o.length; i++) {
+                            values += o[i].B0000 + ",";
+                        }
+                        A01Orgobj.tree.setValue(values);
+                    }
+                });
+            }
+        },
+        //保存
+        btnSave: function () { 
+            if (UserOrganizationObj.selectNode) { 
+
+                var vUserOrgID = UserOrganizationObj.selectNode.ID;
+                var vB0000IDs = A01Orgobj.tree.getValue()
+                $.ajax({
+                    url: "/FileManage/B0101/InsertRelation",
+                    type: 'post',
+                    data: { sUserOrgID: vUserOrgID, B0000IDs: vB0000IDs },
+                    cache: false,
+                    success: function (text) {
+                        mini.alert("保存成功");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        mini.alert(jqXHR.responseText);
+                    }
+                });
+            }
+        },
+        //节点绘制
+        onDrawNode: function (e) {
+            var tree = e.sender;
+            var node = e.node;
+
+            //父节点高亮显示；子节点斜线、蓝色、下划线显示
+            if (node.IsVirtual == true) {
+                e.nodeStyle = 'font-weight:bold;';
+            } else {
+                e.nodeCls = "blueColor";            //nodeCls
+            }
+        }
+    };
+    
+    //页面初始化方法
+    $(function () {
+
+    });
+</script>

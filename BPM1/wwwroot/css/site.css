@@ -1,35 +1,614 @@
-body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+.clearfix:after {
+    content: "";
+    clear: both;
+    overflow: hidden;
+    visibility: hidden;
+    height: 0;
+    display: block;
 }
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-}
+/*searchBox样式*/
 
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
-}
 
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
+.searchBox {
+    /*padding: 5px;*/
+    padding:10px 0;
+    /*overflow: hidden;*/
+    display:inline-block;
 }
-
-/* QR code generator */
-#qrCode {
-    margin: 15px;
-}
-
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
+    .searchBox div {
+        display: block;
+        /* width: 25%;*/
+        width: 24.5%;
+        float: left;
+        padding: 2px 0px;
+        /* height: 25px;*/
+        line-height: 25px;
+        min-width: 280px;
     }
+
+.searchBox div > span:first-child {
+    width: 85px;
+    display: block;
+    float: left;
+    text-align: right;
+    overflow: hidden;
+    height: 29px;/*24px*/
+    line-height:29px;
+    font-size:14px;
+    padding-right: 5px;
+    position: relative;
+    top: -1px;
+    display:  table-cell;
+    text-align: end;
+}
+
+.searchBox div > span:last-child {
+    width: 60%;
+}
+
+.listcontainer .button-right {
+    padding: 2px;
+    border: 0;
+    width: 15%;
+    /* float: right; */
+    /* display: inline-block; */
+    /* position: relative; */
+    /* text-align: right; */
+    height: 20px;
+    right: 0;
+    position: absolute;
+    top: 5px;
+    
+}
+    .listcontainer .button-right .mini-button{
+        float: left;
+    }
+    .listcontainer .button-right a {
+        /*float: right!important;*/
+        /*margin-right: 8px;*/
+    }
+.button-right {
+    /*right: 8px !important;*/
+    right: 0px !important;
+}
+/*add*/
+/* 表格上方input框样式*/
+.searchBox .mini-buttonedit-border {
+    height: 27px;
+}
+.searchBox .mini-buttonedit-border .mini-buttonedit-buttons .mini-buttonedit-trigger {
+    height: 24px;
+}
+.searchBox .mini-buttonedit-input {
+    height: 27px;
+    line-height: 27px;
+}
+.button-right .mini-buttonedit {
+    height: 24px;
+    /*top: -6px !important;*/
+    /*margin-top: 6px !important;*/
+    top:0!important;
+    margin-top: 0px !important;
+}
+
+/*表格底部分页区域*/
+.mini-pager .mini-button-plain {
+    /*background-color: #efefef;*/
+    background-color: white;
+}
+.mini-pager .mini-button-plain:hover {
+    background-color: #dedede;
+}
+/*form表单系列input样式*/
+#form1 > div .mini-buttonedit{
+    top:0!important;
+    padding-top:0;
+    margin-top:0!important;
+    height:auto;
+}
+/*input下拉日期*/
+.mini-buttonedit-icon{
+    margin-top:-8px;
+}
+/*‘查询’按钮与input框等高*/
+.mini-button-text {
+    line-height:1;
+}
+/*调整表格头部按钮统一高度*/
+.mini-button .mini-button-text {
+  padding:6px 10px;
+  font-size:15px;
+}
+/*公共button样式*/
+.button-sty-c {
+    background: #379dce;
+    color:#fff;
+}
+
+/*去除表格单元格中单选框外层border*/
+.radio-no-border > .mini-radiobuttonlist > table td {
+    border: none!important;
+}
+/*去除表格input外边框*/
+.input-no-border > span > span{
+    border:none;
+    background-color:#fff!important;
+}
+
+/*流程图样式*/
+.clearfix:after {
+    content: "";
+    clear: both;
+    overflow: hidden;
+    visibility: hidden;
+    height: 0;
+    display: block;
+}
+.showbox{
+    padding:8px;
+}
+#showContent {
+    /*padding: 30px 0;*/
+    width: 100%;
+    /*height: 150px;*/
+    overflow-y: auto;
+    display: table;
+}
+
+.divShow {
+    width: 150px;
+    height: 47px;
+    /*line-height: 40px;*/
+    text-align: center;
+    border: 1px solid #000;
+    margin-left: 2px;
+    margin-top: 2px;
+    background-color: #657fee;
+    border-color: #dfdfdf;
+    display: table-cell;
+    vertical-align: middle;
+    color: white;
+    border-radius: 8px;
+    border: 1px solid #1fa9f2;
+}
+
+.divShoww {
+    width: 150px;
+    height: 47px;
+    /*line-height: 40px;*/
+    text-align: center;
+    border: 1px solid #000;
+    margin-left: 2px;
+    margin-top: 2px;
+    background-color: #f36f5a;
+    border-color: #dfdfdf;
+    display: table-cell;
+    vertical-align: middle;
+    color: white;
+    border-radius: 8px;
+    border: 1px solid #f5a23a;
+}
+
+
+.divShow div:first-child, .divShoww div:first-child {
+    font-size: 16px;
+}
+
+.divShow div + div, .divShoww div + div {
+    font-size: 12px;
+}
+.divShow div:first-child, .divShoww div:first-child {
+    font-size: 16px;
+}
+
+.divShow div + div, .divShoww div + div {
+    font-size: 12px;
+}
+.divIcon {
+    width: 60px;
+    height: 49px;
+    line-height: 49px;
+    text-align: center;
+    margin-left: 2px;
+    margin-top: 2px;
+    display: table-cell;
+    vertical-align: middle;
+    background: url('/images/arrow.png') no-repeat center;
+}
+
+.show-father {
+    display: inline-block;
+    margin-bottom:8px;
+}
+
+/*修改mini-splitter字体*/
+.mini-splitter-pane .searchBox div > span:first-child {
+    font-family: "微软雅黑",Tahoma, Verdana, 宋体;
+    font-size: 14px; /*12px*/
+}
+
+
+
+/*****************头部按钮改变字体大小和对应input框*******************************/
+
+/*按钮大小*/
+.mini-button .mini-button-text.mini-button-icon-text {
+    padding: 6px 10px;
+    font-size: 15px;
+}
+/*按钮和input并排设置*/
+.mini-toolbar {
+    width: auto !important;
+    height: auto !important;
+    padding: 7px 0 !important;
+    top: 0!important;
+}
+/*设置表格页脚input，避免其他input设置的影响*/
+.mini-pager .mini-buttonedit.mini-combobox.mini-popupedit {
+    height: 21px;
+}
+.mini-pager .mini-buttonedit.mini-combobox.mini-popupedit .mini-buttonedit-border{
+    height:19px;
+}
+.mini-pager .mini-buttonedit.mini-combobox.mini-popupedit .mini-buttonedit-input {
+    height: 18px;
+    line-height: 19px;
+}
+.mini-pager .mini-buttonedit.mini-combobox.mini-popupedit .mini-buttonedit-button, .mini-grid-pager .mini-buttonedit.mini-combobox.mini-popupedit .mini-buttonedit-close {
+    height: 18px;
+}
+
+/*下拉框：右侧是‘叉号’和‘下拉箭头’，下拉内容为树形结构*/
+.mini-buttonedit.mini-treeselect.mini-popupedit {
+    height: auto;
+}
+.mini-buttonedit.mini-treeselect.mini-popupedit .mini-buttonedit-border {
+    height: 27px;
+}
+.mini-buttonedit.mini-treeselect.mini-popupedit .mini-buttonedit-input {
+    height: 27px;
+    line-height: 27px;
+}
+.mini-buttonedit.mini-treeselect.mini-popupedit .mini-buttonedit-button, .mini-buttonedit.mini-treeselect.mini-popupedit .mini-buttonedit-close {
+    height: 24px;
+}
+/*纯input框：没有任何图标*/
+.mini-textbox{
+    height:auto;
+}
+.mini-textbox .mini-textbox-border {
+    height: 27px;
+}
+.mini-textbox .mini-textbox-input{
+    height:27px;
+    line-height:27px;
+}
+
+.mini-placeholder-label{
+    line-height:23px;/*ie下不支持placholder的情况*/
+}
+.mini-toolbar .mini-button .mini-button-text { /*对于没有加iconCls="icon-add"等类名的按钮*/
+    padding: 6px 10px;
+    font-size: 15px;
+}
+.button-size-c .mini-button-text { /*自定义类名*/
+    padding: 6px 10px;
+    font-size: 15px;
+}
+/*下拉框：右侧只有一个‘下拉箭头’，下拉内容为纯文本,页脚分页器中的下拉框也是该类型*/
+.searchBox .mini-buttonedit.mini-combobox.mini-popupedit .mini-buttonedit-border {
+    height: 27px;
+}
+searchBox .mini-buttonedit.mini-combobox.mini-popupedit .mini-buttonedit-input {
+    height: 27px;
+    line-height: 27px;
+}
+
+/*下拉框：日期下拉框*/
+.mini-buttonedit.mini-datepicker.mini-popupedit{
+    height:auto;
+}
+.mini-buttonedit.mini-datepicker.mini-popupedit .mini-buttonedit-border{
+    height:27px;
+}
+.mini-buttonedit.mini-datepicker.mini-popupedit .mini-buttonedit-input{
+    height:27px;
+    line-height:27px;
+}
+.mini-buttonedit.mini-datepicker.mini-popupedit .mini-buttonedit-button, .mini-buttonedit.mini-datepicker.mini-popupedit .mini-buttonedit-close {
+    height: 24px;
+}
+
+/*下拉框*/
+.mini-buttonedit.mini-combobox.mini-popupedit{
+    height:auto;
+}
+.mini-buttonedit.mini-combobox.mini-popupedit .mini-buttonedit-border{
+    height:27px;
+}
+.mini-buttonedit.mini-combobox.mini-popupedit .mini-buttonedit-input{
+    height:27px;
+    line-height:27px;
+}
+.mini-buttonedit.mini-combobox.mini-popupedit .mini-buttonedit-button, .mini-buttonedit.mini-combobox.mini-popupedit .mini-buttonedit-close{
+    height:24px;
+}
+/*下拉框，弹出‘地区’*/
+.mini-buttonedit{
+    height:auto;
+}
+.mini-buttonedit .mini-buttonedit-border{
+    height:27px;
+}
+.mini-buttonedit .mini-buttonedit-border .mini-buttonedit-input{
+    height:27px;
+    line-height:27px;
+}
+.mini-buttonedit .mini-buttonedit-button, .mini-buttonedit .mini-buttonedit-close{
+    height:24px;
+}
+/*头部多input框和按钮上下对其*/
+#form1.searchBox + .mini-toolbar {
+    padding: 12px 0 !important;
+}
+
+/*"材料明细"等含有"备注"的区域*/
+.form-include-remark .mini-textbox.mini-textarea {
+    height: auto!important;
+}
+.form-include-remark .mini-textbox.mini-textarea .mini-textbox-input {
+    height:27px!important;
+}
+.form-include-remark td > span {
+    width: 100%!important;
+}
+.form-include-remark .mini-textbox {
+    width: 100%!important;
+}
+/*"材料明细"等有"备注"的区域*/
+.mini-textarea, .mini-textarea > span{
+    height: auto;
+}
+.mini-textarea .mini-textbox-border{
+    height: 80px!important;
+}
+.form-include-remark .mini-textbox.mini-textarea textarea.mini-textbox-input {
+    height: 80px !important;
+}
+.mini-textarea > span textarea {
+    height: 80px !important;
+}
+/*****************头部按钮改变字体大小和对应input框 End *******************************/
+/*表格单元格内容不换行*/
+td.label-item {
+    word-break: keep-all;
+    white-space: nowrap;
+}
+
+/*mini-toolbar*/
+.mini-toolbar{
+    font-size:16px;
+}
+/*调整mini-toolbar之间的距离  inline元素之间默认的间距去掉*/
+/*.mini-toolbar table tr a, .mini-toolbar a {
+    margin-right:-4px;
+}*/
+#form1 a, .searchBox a, .buttom-box a, .Cadrebottom a{
+    /*margin-right: -4px;*/
+    /*margin-left:4px;*/
+}
+.button-right a {
+    margin-right: 0;
+}
+.mini-toolbar > span {
+    margin-left: 8px;
+     float:left; 
+}
+.bottom-btn .mini-button{
+    float: inherit !important;
+}
+.mini-toolbar > a + span {
+    /*margin-right: -4px;*/
+    /*margin-left: 4px;*/
+}
+.button-right .btn-right-last{
+     margin-right: 8px!important; 
+}
+/*单选框*/
+.mini-radiobuttonlist table label {
+    font-size: 15px;
+}
+.mini-pager .mini-button-text{padding:3px 10px;}
+.mini-button .mini-button-icon-only .mini-button-icon{left:4px;}
+
+/*分页器*/
+.mini-pager .mini-pager-index > input{
+   position:relative\0;
+   top:1px\0;
+   line-height:20px\0;
+   font-size:14px\0;
+   font-family:"微软雅黑"\0;
+}
+
+/*弹出小窗口关闭按钮位置*/
+.mini-window .mini-tools {
+    top: 6px;
+}
+
+/*大表格中textarea的高度*/
+.menuTitle tr > td .mini-textarea .mini-textbox-border .mini-textbox-input, .menuTitle tr > td .mini-textarea .mini-textbox-border {
+    height: 100% !important;
+}
+
+/*按钮颜色*/
+
+/*新增*/
+.green {
+    background: #00bda9 !important;
+}
+/*编辑*/
+.Pink {
+    background: #657fee !important;
+}
+/*删除*/
+.gules {
+    background: #f36f5a !important;
+}
+/*浏览*/
+.Light {
+    background: #f5a23a !important;
+}
+/*排序*/
+.Blue {
+    background: #1fa9f2 !important;
+}
+
+
+/*textarea若为必须输入，焦点离开会出现红色警告*/
+.mini-textarea .mini-errorIcon {
+    top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.mini-textarea > .mini-errorIcon {
+    height: 100%!important;
+}
+
+
+/*表格头部标题*/
+.title-sty {
+    text-align: center;
+    letter-spacing: 16px;
+    font-size: 35px;
+    font-family: '微软雅黑';
+    height: 30px;
+    line-height: 30px;
+    margin-top:20px;
+    /*font-weight:bold;*/
+}
+
+/*表格字体*/
+.menuTitle td{
+    font-size:22px!important;
+    color:black!important;
+    border-color:black!important;
+}
+/*.menuTitle {
+   border: 2px solid black!important;
+}*/
+.bold-border{
+    border: 2px solid black !important;
+}
+
+/*表格边框加粗黑*/
+.black-table .mini-toolbar {
+    border-left: 2px solid black;
+    border-top:2px solid black;
+    border-right: 2px solid black;
+    border-bottom: 1px solid black;
+}
+.black-table .mini-panel-border {
+    border: 2px solid black;
+}
+.black-table .mini-grid-cell, .black-table  .mini-grid-headerCell {
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+}
+.black-table .mini-toolbar, .black-table .mini-grid-headerCell-nowrap {
+    font-size: 22px;
+    color: black;
+}
+.black-table .mini-grid-cell-nowrap, .black-table .mini-textbox-input {
+    color: black !important;
+}
+
+/*按钮变大*/
+.big-btn .mini-button-text {
+    padding: 10px 30px !important;
+    font-size: 22px !important;
+    font-family: '宋体';
+}
+
+
+/*miniui方法去除input边框的方法*/
+.asLabel .mini-textbox-border,
+.asLabel .mini-textbox-input,
+.asLabel .mini-buttonedit-border,
+.asLabel .mini-buttonedit-input,
+.asLabel .mini-textboxlist-border {
+    border: 0;
+    background: none;
+    cursor: default;
+}
+
+.asLabel .mini-buttonedit-button,
+.asLabel .mini-textboxlist-close {
+    display: none;
+}
+
+.asLabel .mini-textboxlist-item {
+    padding-right: 8px;
+}
+
+
+.listcont .listcontainer-noborder{
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    border: none !important;
+}
+
+/*当textarea没有边框时，左侧label文字跟靠上，与右侧textarea内容居中*/
+.last-label {
+    vertical-align: top;
+}
+
+.last-label-input .mini-textbox .mini-textbox-input {
+    line-height: 22px;
+}
+
+/*分页符样式*/
+.mini-pager .mini-button{
+    margin-left:0;
+}
+
+.mini-pager .mini-button-text {
+    padding: 2px 8px 4px 14px !important;
+}
+
+/*图片上传*/
+.btn .mini-button {
+    float: inherit !important;
+}
+
+/*个别按钮左浮动消除inline-block之间的默认距离*/
+.searchBox .mini-button{
+    float:left;
+}
+
+/*弹窗内表格样式*/
+.window-listcont .mini-toolbar {
+    border: none;
+}
+
+.window-listcont .mini-fit {
+    padding:0 8px 8px;
+}
+.window-listcont .listcontainer{
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+
+/*右侧按钮浮动*/
+.right-float .mini-buttonedit, .right-float .mini-textbox {
+    float: left;
+}
+
+/*解决textarea 在ie中不换行*/
+.area-td{
+    white-space: inherit !important;
 }

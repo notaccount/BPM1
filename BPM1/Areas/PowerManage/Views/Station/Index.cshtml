@@ -1,0 +1,227 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+}
+<style>
+    .mini-grid-headerCell:last-child, .mini-grid-cell:last-child {
+        border-right: none;
+    }
+    .mini-toolbar {
+        padding:10px 0 !important;
+        border:none;
+    }
+</style>
+
+<div class="listcont">
+    <div class="listcontainer" style="position:absolute;top: 0;left: 12px;right: 12px;bottom: 12px;">
+        <div class="mini-toolbar" style="padding:2px;">
+            <a class="mini-button green" plain="true" onclick="Stationsobj.btnAdd" style="margin-left:0px;">新增</a>
+            <a class="mini-button Pink" plain="true" onclick="Stationsobj.btnEdit">编辑</a>
+            <a class="mini-button gules" plain="true" onclick="Stationsobj.btnDel">删除</a>
+            <a class="mini-button Blue" plain="true" onclick="Stationsobj.btnSort">排序</a>
+            @*<a class="mini-button"  plain="true" onclick="Stationsobj.btnExport">导出</a>
+                <a class="mini-button"  plain="true" onclick="Stationsobj.btnImport">导入</a>*@
+        </div>
+        <div class="mini-fit">
+            <div id="grid" class="mini-datagrid"  allowMoveColumn="false" style="width:100%;height:100%;" onbeforeload="basePageSizeObj.beforeload"
+                 url="/PowerManage/Station/GetPagerJson" idField="ID" allowResize="false"  allowAlternating="true">
+                <div property="columns">
+                    <div type="indexcolumn"></div>
+                    <div field="Code" width="80" headerAlign="center" align="left" allowSort="false">岗位编码</div>
+                    <div field="Name" width="120" headerAlign="center" align="left" allowSort="false">岗位名称</div>
+                    <div field="Remarks" width="350" headerAlign="center" align="left" allowSort="false">备注</div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<script type="text/javascript">
+    //miniui初始化
+    mini.parse();
+
+    //增、删、改、查、排序、导入、导出
+    var Stationsobj = {
+        grid: mini.get("grid"),
+        //查找事件
+        btnSearch: function () {
+            var Parameter = [];
+            //编码
+            var vCode = mini.get("Code").value;
+            if (!!vCode) {
+                Parameter.push({
+                    paramName: 'Code',
+                    paramValue: vCode,
+                    Operation: 'Like',
+                    Logic: "AND"
+                });
+            }
+            //名称
+            var vName = mini.get("Name").value;
+            if (!!vName) {
+                Parameter.push({
+                    paramName: 'Name',
+                    paramValue: vName,
+                    Operation: 'Like',
+                    Logic: "AND"
+                });
+            }
+            Stationsobj.grid.load({ ParameterJson: JSON.stringify(Parameter) });
+        },
+        // 增加事件
+        btnAdd: function () {
+            hasng.WinOpen({
+                url: "/PowerManage/Station/AddOrEditStationView",
+                title: "新增", width: 650, height: 240,
+                onload: function (iframe) {
+
+                    var data = { action: "new" };
+                    iframe.contentWindow.Stationsobj.setData(data);
+                },
+                ondestroy: function (action) {
+                    Stationsobj.grid.reload();
+                }
+            });
+        },
+        // 编辑事件
+        btnEdit: function () {
+            var row = Stationsobj.grid.getSelected();
+            if (!!row) {
+                if (row.U_IsSystem == "True") {
+                    mini.alert("系统内置账户，不允许编辑！");
+                } else
+                {
+                    hasng.WinOpen({
+                        url: "/PowerManage/Station/AddOrEditStationView",
+                        title: "编辑", width: 650, height: 240,
+                        onload: function (iframe) {
+
+                            var data = { action: "edit", id: row.ID };
+                            iframe.contentWindow.Stationsobj.setData(data);
+                        },
+                        ondestroy: function (action) {
+                            Stationsobj.grid.reload();
+                        }
+                    });
+                }
+
+            } else {
+                 hasng.Alert();
+            }
+        },
+        // 删除事件
+        btnDel: function () {
+            var row = Stationsobj.grid.getSelected();
+            if (!!row) {
+                var id = row.ID;
+                //删除之前判断是否是系统内置岗位
+                $.ajax({
+                    url: "/PowerManage/Station/GetEntity?id=" + id,
+                    cache: false,
+                    success: function (data) {
+                        //转换成json对象
+                        var dataJson = mini.decode(data);
+                        if (String(dataJson.U_IsSystem) == "true") {
+                            mini.alert("系统内置岗位，不允许删除！");
+                        } else {
+                            //不是系统内置账户可以删除
+                            hasng.DelConfirm(function () {
+                                        Stationsobj.grid.loading("操作中，请稍后......");
+                                        $.ajax({
+                                            url: "/PowerManage/Station/Delete",
+                                            data: { "id": id },
+                                            type: "Post",
+                                            success: function (text) {
+                                                mini.alert("删除成功！");
+                                                Stationsobj.grid.reload();
+                                            },
+                                            error: function () {
+                                                mini.alert("出现异常！");
+                                            }
+                                        });
+                                });
+                        }
+                    }
+                });
+            } else {
+                 hasng.Alert();
+            }
+        },
+        // 排序事件
+        btnSort: function () {
+            var row = Stationsobj.grid.getSelected();
+            //var pid = "";
+            //if (!!row)
+            //    pid = row.ID;
+            //var obj = {
+            //    tablename: "Power_Stations",  //被排序的表名称
+            //    idfile: "Id",             //被排序表的主键名称
+            //    pidfile: "",      //被排序表的父级名称
+            //    pidvalue: "",            //父键ID
+            //    //需要显示的字段
+            //    columns: [
+            //        { file: 'Id', name: '主键', width: '200', hidden: true },
+            //        { file: 'name', name: '名称', width: '200', hidden: false }
+            //    ]
+            //};
+            ////传入参数，回掉函数
+            //orderObj.showWin(obj, function () {
+            //    //重新加载数据
+            //    Stationsobj.grid.load();
+            //})
+
+
+
+
+
+            var Parameter = [];
+            //if (!!row) {
+            //    Parameter.push({
+            //        paramName: 'ID5',
+            //        paramValue: row.ID,
+            //        Operation: 'Equal',
+            //        Logic: "AND"
+            //    });
+            //} else {
+            //    Parameter.push({
+            //        paramName: 'ID5',
+            //        paramValue: pid,
+            //        Operation: 'Null',
+            //        Logic: "AND"
+            //    });
+            //}
+            var obj = {
+                tablename: "Power_Stations",  //被排序的表名称
+                ParameterJson: mini.encode(Parameter)
+            };
+            //传入参数，回掉函数
+            orderObj.showWin(obj, function () {
+                Stationsobj.grid.reload();
+            })
+
+
+        },
+        // 导出事件
+        btnExport: function () {
+            var Parameter = [];
+            CommControl_Export.btnExport("Power_Stations", mini.encode(Parameter));
+        },
+        //导入事件
+        btnImport: function () { }
+    };
+
+    //页面加载时执行
+    $(function () {
+        var Parameter = [];
+        Parameter.push({
+            paramName: 'U_AreaCode',
+            paramValue: '@Hasng.CadreFile.Utilities.ManageProvider.Current.U_AreaCode',
+            Operation: 'Equal',
+            Logic: "AND"
+        });
+        Stationsobj.grid.load({ ParameterJson: JSON.stringify(Parameter) });
+    })
+
+</script>

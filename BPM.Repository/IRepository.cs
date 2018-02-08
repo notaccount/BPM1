@@ -10,7 +10,7 @@ namespace BPM.Repository
     {
         DataContext Query();
 
-        T GetById(int id);
+        T GetById(Guid id);
         IEnumerable<T> List();
         IEnumerable<T> List(Expression<Func<T, bool>> predicate);
         void Add(T entity);

@@ -1,0 +1,92 @@
+        /*去除表格 多余边框 以及表格样式 嵌套minmiui表格*/
+    	.orign-tbody tr td{
+    		border:1px solid black;
+    		font-size: 14px;
+    		font-family: "微软雅黑",Tahoma, Verdana, 宋体;
+    		color:#666666;
+    	}
+    	.orign-tbody tr{
+    		line-height: 40px;
+    	}
+    	thead tr td{
+    		border:none;
+    	}
+    	thead{
+    		border:1px solid black;
+    	} 
+    	
+    	#main-table {
+			border-collapse: collapse;
+			width:600px;
+    		margin: 0 auto;
+    	}
+    	.mini-grid-border{
+    		border:none;
+    	}
+    	
+    	.mini-grid-headerCell-outer{
+    		background:white;
+    	}
+    	
+    	/*标题样式*/
+    	h2{
+    		text-align: center;
+    		margin-top: 30px;
+    	}
+    	/*头部返回按钮样式*/
+    	.button-right{
+    		border:0;
+    	}
+    	/*改变分页按钮样式*/
+    	.mini-pager-first {
+		    background: url(../img/pager/first.png) no-repeat;
+		}
+		.mini-pager-prev {
+		    background-image: url(../img/pager/prev.png);
+		}
+		.mini-pager-next {
+		    background-image: url(../img/pager/next.png);
+		}
+		.mini-pager-last {
+		    background-image: url(../img/pager/last.png);
+		}
+		.mini-pager-reload {
+		    background-image: url(../img/pager/reload.png);
+		}
+		.button-right .mini-button{
+			float:right;
+		}
+    	
+		/*miniui表格边框颜色*/
+.mini-grid-cell, .mini-grid-headerCell, .mini-grid-filterCell, .mini-grid-summaryCell {
+    border-right: black 1px solid;
+    border-bottom: black 1px solid;
+}
+		.mini-grid-pager{	
+    		border-top: solid 1px black;
+		}
+        /*miniui输入框颜色*/
+        .mini-required .mini-textbox-border, .mini-required .mini-buttonedit-border{
+                background:white;
+        }
+        /*去除表格input外边框*/
+        .orign-tbody .mini-buttonedit-border {
+            border: none !important;
+        }
+        table tbody > tr > td {
+            color: #666666;
+            font-size: 15px;
+        }
+        table tbody > tr > td input {
+            border: none;
+            outline: none;
+            font-family: '宋体';
+            font-size: 19px;
+            font-weight: bold;
+            color: black!important;
+            border: none !important;
+            text-align: center;
+        }
+        .mini-grid-headerCell:last-child, .mini-grid-cell:last-child {
+            border-right: none;
+        }

@@ -1,0 +1,276 @@
+
+@{
+    ViewData["Title"] = "CheckIcon";
+    //Layout = "~/Views/Shared/_LayoutMiniUI.cshtml";
+    Layout = null;
+}
+
+<script src="/miniui/jquery-1.8.2.min.js"></script>
+<link type="text/css" href="/page/iconfont/iconfont.css" rel="stylesheet" />
+
+<style type="text/css">
+    div.name, div.fontclass {
+        display: none;
+    }
+    ul > li {
+        display:block;
+        float:left;
+        text-decoration:none;
+        /*padding:5px;*/
+        cursor:pointer;
+        height:48px;
+        width:48px;
+    }
+    li > i {
+        font-size:30px;
+    }
+    .hoverClass {
+        font-size:32px;
+    }
+
+</style>
+
+<script type="text/javascript">
+    var className = "";
+    $(function () {
+
+        $("i").css({"font-size":"30px"});
+
+
+        $("i").mouseover(function () {
+            $(this).addClass("hoverClass");
+        }).mouseout(function () {
+                $(this).removeClass("hoverClass");
+            }).click(function () {
+                var html = $(this).parent().find("div.fontclass").text();
+                className = html.replace(".", "");
+            }).dblclick(function () { 
+                var html = $(this).parent().find("div.fontclass").text();
+                className = html.replace(".", "");
+                onCancel();
+            });
+    })
+
+    function GetData() {
+        return className;
+    }
+
+
+
+    function CloseWindow(action) {
+        if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+        else window.close();
+    }
+
+    function onOk() {
+        CloseWindow("ok");
+    }
+    function onCancel() {
+        CloseWindow("cancel");
+    }
+
+</script>
+
+
+
+<ul class="icon_lists clear">
+
+    <li>
+        <i class="icon iconfont icon-xiajiantou"></i>
+        <div class="name">下箭头</div>
+        <div class="fontclass">.icon-xiajiantou</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-tuichu"></i>
+        <div class="name">退出</div>
+        <div class="fontclass">.icon-tuichu</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-icon07"></i>
+        <div class="name">箭头</div>
+        <div class="fontclass">.icon-icon07</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-jiantoushang"></i>
+        <div class="name">箭头-上</div>
+        <div class="fontclass">.icon-jiantoushang</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-icon"></i>
+        <div class="name">文本</div>
+        <div class="fontclass">.icon-icon</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-shuju"></i>
+        <div class="name">数据</div>
+        <div class="fontclass">.icon-shuju</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-iconfontshezhi"></i>
+        <div class="name">设置</div>
+        <div class="fontclass">.icon-iconfontshezhi</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-shezhi"></i>
+        <div class="name">设置</div>
+        <div class="fontclass">.icon-shezhi</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-bianji01"></i>
+        <div class="name">铅笔</div>
+        <div class="fontclass">.icon-bianji01</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-tongji"></i>
+        <div class="name">统计</div>
+        <div class="fontclass">.icon-tongji</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-duihao"></i>
+        <div class="name">对号</div>
+        <div class="fontclass">.icon-duihao</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-jiantou-copy"></i>
+        <div class="name">箭头</div>
+        <div class="fontclass">.icon-jiantou-copy</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-heilongjiangtubiao13"></i>
+        <div class="name">查询</div>
+        <div class="fontclass">.icon-heilongjiangtubiao13</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-batchreview"></i>
+        <div class="name">批量审阅</div>
+        <div class="fontclass">.icon-batchreview</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-dangan"></i>
+        <div class="name">档案</div>
+        <div class="fontclass">.icon-dangan</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-yuandian"></i>
+        <div class="name">圆点</div>
+        <div class="fontclass">.icon-yuandian</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-fasongyoujian"></i>
+        <div class="name">信息传递</div>
+        <div class="fontclass">.icon-fasongyoujian</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-shenpi42x36"></i>
+        <div class="name">审批</div>
+        <div class="fontclass">.icon-shenpi42x36</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-spread-h-bar"></i>
+        <div class="name">三横线</div>
+        <div class="fontclass">.icon-spread-h-bar</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-mingce"></i>
+        <div class="name">名册</div>
+        <div class="fontclass">.icon-mingce</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-sanjiaoxing"></i>
+        <div class="name">三角形</div>
+        <div class="fontclass">.icon-sanjiaoxing</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-gerenshezhi"></i>
+        <div class="name">个人设置</div>
+        <div class="fontclass">.icon-gerenshezhi</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-renyuan"></i>
+        <div class="name">人员</div>
+        <div class="fontclass">.icon-renyuan</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-renyuan2"></i>
+        <div class="name">人员</div>
+        <div class="fontclass">.icon-renyuan2</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-xinxichayue"></i>
+        <div class="name">信息查阅</div>
+        <div class="fontclass">.icon-xinxichayue</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-chanpinshuomingsanjiaoxing"></i>
+        <div class="name">产品说明三角形</div>
+        <div class="fontclass">.icon-chanpinshuomingsanjiaoxing</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-touxiang"></i>
+        <div class="name">头像 (1)</div>
+        <div class="fontclass">.icon-touxiang</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-richang"></i>
+        <div class="name">日常</div>
+        <div class="fontclass">.icon-richang</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-analysis"></i>
+        <div class="name">分析</div>
+        <div class="fontclass">.icon-analysis</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-xitong-zuzhijiagou"></i>
+        <div class="name">系统-组织架构</div>
+        <div class="fontclass">.icon-xitong-zuzhijiagou</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-shouye-shouye"></i>
+        <div class="name">首页-首页</div>
+        <div class="fontclass">.icon-shouye-shouye</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-piyue"></i>
+        <div class="name">批阅</div>
+        <div class="fontclass">.icon-piyue</div>
+    </li>
+
+    <li>
+        <i class="icon iconfont icon-jiantou-copy-copy"></i>
+        <div class="name">箭头</div>
+        <div class="fontclass">.icon-jiantou-copy-copy</div>
+    </li>
+
+</ul>
